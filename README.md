@@ -1,10 +1,18 @@
-# Express API Starter
+## 3 layers
 
-How to use this template:
+1. Web layer. Responsible for sending, receiving, and validating HTTP requests. Common configuration here includes routes, controllers, and middleware.
 
-```sh
-npx create-express-api --directory my-api-name
-```
+2. Service layer. Contains business logic.
+
+3. Data access layer. Where we read and write to a database. We typically use an ORM like Mongoose or Sequelize.
+
+## Controller
+
+The best practice for controllers is to keep them free of business logic. Their single job is to get any relevant data from the req object and dispatch it to services. The returned value should be ready to be sent in a response using res.
+
+## Service 
+
+
 
 Includes API Server utilities:
 
@@ -40,14 +48,3 @@ npm install
 npm run lint
 ```
 
-## Test
-
-```
-npm test
-```
-
-## Development
-
-```
-npm run dev
-```
