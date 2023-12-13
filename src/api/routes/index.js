@@ -1,27 +1,41 @@
-const express = require('express');
+const express = require("express");
 
-// import all the routes here
+const schemas = require("../schemas");
+
+const validate = require("../middlewares/validate");
+
+const controllers = require("../controllers");
 
 const router = express.Router();
 
 /**
  * GET v1/status
  */
-router.get('/', (req, res) => {
-	res.json({
-		message: 'OK',
-		timestamp: new Date().toISOString(),
-		IP: req.ip,
-		URL: req.originalUrl,
-	});
+router.get("/", (req, res) => {
+  res.json({
+    message: "OK",
+    timestamp: new Date().toISOString(),
+    IP: req.ip,
+    URL: req.originalUrl,
+  });
 });
 
-//router.get('leaderboard')
+//router.get('/leaderboard')
 
-//router.post('gamestate')
+//router.get('/alltime')
 
-//router.get('user')
+router.post("/signup", validate(schemas.signupSchema), controllers.signup);
 
-//router.get('leaderboard')
+router.post("/gamestate", (req, res) => {
+  console.log(req.body);
+  res.json({
+    message: "post successful",
+    timestamp: new Date().toISOString(),
+    IP: req.ip,
+    URL: req.originalUrl,
+  });
+});
+
+//router.get('/user')
 
 module.exports = router;
