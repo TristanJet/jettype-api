@@ -1,9 +1,11 @@
 // import services
+const verify = require('./services/google-verify.service')
 
 
-exports.signup = async (req, res) => {
+const signup = async (req, res) => {
 		try {
-			const id = req.params.id
+			const decoded = await verify(req.body.credential)
+			console.log(decoded)
 			res.json({
 				message: 'signup successful',
 				timestamp: new Date().toISOString(),
@@ -14,5 +16,9 @@ exports.signup = async (req, res) => {
 		catch (err) {
 		res.status(500).send(err)
 		}
-	}
+}
+
+module.exports = {
+  signup,
+}
 
