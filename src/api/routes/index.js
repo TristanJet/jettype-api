@@ -24,7 +24,7 @@ router.get("/", (req, res) => {
 
 //router.get('/alltime')
 
-router.post("/signup", validate(schemas.signupSchema), controllers.signup);
+router.post("/signup", validate(schemas.signupSchema), controllers.signupcontroller);
 
 router.post("/gamestate", (req, res) => {
   console.log(req.body);
