@@ -6,9 +6,8 @@ const signup = async (jwt) => {
   const decoded = await verify(jwt);
   await createUser(decoded.sub, decoded.given_name, decoded.email);
   const sessionId = createId();
-  await createSession(decoded.sub, sessionId)
-
-  /**Create session, set cookie */
+  await createSession(decoded.sub, sessionId);
+  return sessionId;
 }
 
 module.exports = signup
