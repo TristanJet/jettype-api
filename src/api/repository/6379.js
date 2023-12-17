@@ -13,15 +13,25 @@ client.on("error", (err) => {
   await client.connect();
 })();
 
-const createUser = async (obj) => {
-  return await client.HSET(`user:${obj.sub}`, {
-    name: obj.given_name,
-    email: obj.email,
+const createUser = async (id, name, email) => {
+  return await client.HSET(`user:${id}`, {
+    name: name,
+    email: email,
     wpm: 0,
     totalCrowns: 0,
   });
 };
 
+const createSession = async (userId, sessionId) => {
+  return await client.SET(
+    `session:${sessionId}`,
+    `user:${userId}`, {
+      EX: 2600000
+    }
+  );
+}
+
 module.exports = {
   createUser,
+  createSession
 };
