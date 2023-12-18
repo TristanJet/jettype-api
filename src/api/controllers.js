@@ -4,7 +4,8 @@ const signup = require('./services/signup.service')
 
 const signupcontroller = async (req, res, next) => {
 		try {
-			const sessionId = await signup(req.body.credential)
+			const userId = await signup.user(req.body.credential)
+			const sessionId = await signup.session(userId)
 			res.cookie('jet-session', sessionId, {
 				maxAge: (2600000 * 1000),
 				httpOnly: true,

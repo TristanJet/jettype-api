@@ -14,16 +14,21 @@ client.on("error", (err) => {
 })();
 
 const createUser = async (id, name, email) => {
-  return await client.HSET(`user:${id}`, {
+  const exists = await client.EXISTS(`user:${id}`)
+  if (exists) {
+    return true
+  }
+  await client.HSET(`user:${id}`, {
     name: name,
     email: email,
     wpm: 0,
     totalCrowns: 0,
   });
+  return false
 };
 
 const createSession = async (userId, sessionId) => {
-  return await client.SET(
+  await client.SET(
     `session:${sessionId}`,
     `user:${userId}`, {
       EX: 2600000

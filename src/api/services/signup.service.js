@@ -2,12 +2,22 @@ const verify = require('../utility/google-verify')
 const createId = require('../utility/createId')
 const { createUser, createSession } = require('../repository')
 
-const signup = async (jwt) => {
+const user = async (jwt) => {
   const decoded = await verify(jwt);
-  await createUser(decoded.sub, decoded.given_name, decoded.email);
+  const created = await createUser(decoded.sub, decoded.given_name, decoded.email);
+  if (created) {
+    throw new Error('User already exists')
+  }
+  return decoded.sub
+}
+
+const session = async (userId) => {
   const sessionId = createId();
-  await createSession(decoded.sub, sessionId);
+  await createSession(userId, sessionId);
   return sessionId;
 }
 
-module.exports = signup
+module.exports = {
+  user,
+  session
+}
