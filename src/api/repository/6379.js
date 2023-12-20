@@ -14,17 +14,14 @@ client.on("error", (err) => {
 })();
 
 const createUser = async (id, name, email) => {
-  const exists = await client.EXISTS(`user:${id}`)
-  if (exists) {
-    return true
-  }
-  await client.HSET(`user:${id}`, {
+  await client.HSET(`user:${id}`, 
+  {
     name: name,
     email: email,
     wpm: 0,
     totalCrowns: 0,
-  });
-  return false
+  }
+  );
 };
 
 const createSession = async (userId, sessionId) => {
@@ -34,9 +31,30 @@ const createSession = async (userId, sessionId) => {
       EX: 2600000
     }
   );
+  await client.HSET(
+    `user:${userId}`, 
+    {
+      sessionId: sessionId
+    }
+  )
+}
+
+const getSessionId = async (userId) => {
+  return await client.HGET(`user:${userId}`, 'sessionId')
+}
+
+const userExists = async (id) => {
+  return await client.EXISTS(`user:${id}`)
+}
+
+const sessionExists = async (sessionId) => {
+  return await client.EXISTS(`session:${sessionId}`)
 }
 
 module.exports = {
   createUser,
-  createSession
+  createSession,
+  getSessionId,
+  userExists,
+  sessionExists
 };
