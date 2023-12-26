@@ -1,6 +1,6 @@
 const verify = require('../utility/google-verify')
 const createId = require('../utility/createId')
-const { createUser, createSession, getSessionId, userExists, sessionExists } = require('../repository')
+const { createUser, createSession, getSessionId, userExists, sessionExists } = require('../../repository')
 
 const user = async (jwt) => {
   const decoded = await verify(jwt);

@@ -1,4 +1,4 @@
-const { sessionExists } = require("../repository");
+const { sessionExists } = require("../../repository");
 
 const authcontroller = async (req, res, next) => {
   try {
