@@ -1,5 +1,6 @@
+const { pushGameState, popGameState } = require('../repository')
+
 const wsServer = (ws, request, client) => {
-  console.log(`This token is good: ${request.headers.cookie}`);
   console.log("Connection gucci");
 
   ws.on("error", (err) => {
@@ -12,8 +13,13 @@ const wsServer = (ws, request, client) => {
   })
 
   ws.on("message", (data) => {
-    console.log(`Message: ${data}, from client: ${client}`);
+    onMessage(client, data)
   });
 };
+
+const onMessage = async (client, data) => {
+  console.log(`Message: ${data}, from client: ${client}`);
+  console.log(await pushGameState(client, data))
+}
 
 module.exports = wsServer

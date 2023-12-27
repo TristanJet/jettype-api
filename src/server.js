@@ -32,7 +32,7 @@ server.on('upgrade', (request, socket, head) => {
       socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
       socket.destroy();
     }
-  } catch (e) {
+  } catch {
     socket.destroy()
     console.log('On connect error')
   }

@@ -39,6 +39,14 @@ const createSession = async (userId, sessionId) => {
   )
 }
 
+const pushGameState = async (sessionId, data) => {
+  return await client.RPUSH(`gameState:${sessionId}`, data)
+}
+
+const popGameState = async (sessionId, data) => {
+  return await client.RPOP(`gameState:${sessionId}`, data)
+}
+
 const getSessionId = async (userId) => {
   return await client.HGET(`user:${userId}`, 'sessionId')
 }
@@ -54,6 +62,8 @@ const sessionExists = async (sessionId) => {
 module.exports = {
   createUser,
   createSession,
+  pushGameState,
+  popGameState,
   getSessionId,
   userExists,
   sessionExists
