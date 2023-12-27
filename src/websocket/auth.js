@@ -9,7 +9,7 @@ const upgradeAuth = async (request) => {
   if (!sessionToken || !(await sessionExists(sessionToken))) {
     return false;
   }
-  return true
+  return sessionToken
 };
 
 module.exports = upgradeAuth
