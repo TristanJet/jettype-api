@@ -47,6 +47,10 @@ const popGameState = async (sessionId, data) => {
   return await client.RPOP_COUNT(`gameState:${sessionId}`, data)
 }
 
+const checkGameState = async (sessionId) => {
+  return await client.LRANGE(`gameState:${sessionId}`, 0, -1)
+}
+
 const getSessionId = async (userId) => {
   return await client.HGET(`user:${userId}`, 'sessionId')
 }
@@ -64,6 +68,7 @@ module.exports = {
   createSession,
   pushGameState,
   popGameState,
+  checkGameState,
   getSessionId,
   userExists,
   sessionExists
