@@ -73,3 +73,5 @@ typings/
 .serverless
 
 dump.rdb
+
+src/websocket/obj.create.js

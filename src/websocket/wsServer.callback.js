@@ -13,13 +13,22 @@ const wsServer = (ws, request, client) => {
   })
 
   ws.on("message", (data) => {
+    data = JSON.parse(data)
     onMessage(client, data)
   });
 };
 
-const onMessage = async (client, data) => {
+const onMessage = (client, data) => {
   console.log(`Message: ${data}, from client: ${client}`);
-  console.log(await pushGameState(client, data))
+  let resp;
+  data.commands.forEach(async (command) => {
+    if (command.cmd === 'ADD') {
+      resp = await pushGameState(client, command.val)
+    } else if (command.cmd === 'DEL') {
+      resp = await popGameState(client, command.num)
+    }
+  console.log(resp)
+  });
 }
 
 module.exports = wsServer

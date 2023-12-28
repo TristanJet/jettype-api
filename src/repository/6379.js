@@ -44,7 +44,7 @@ const pushGameState = async (sessionId, data) => {
 }
 
 const popGameState = async (sessionId, data) => {
-  return await client.RPOP(`gameState:${sessionId}`, data)
+  return await client.RPOP_COUNT(`gameState:${sessionId}`, data)
 }
 
 const getSessionId = async (userId) => {
