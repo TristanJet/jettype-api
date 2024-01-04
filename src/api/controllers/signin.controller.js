@@ -9,7 +9,7 @@ const signincontroller = async (req, res, next) => {
       maxAge: 2600000 * 1000,
       httpOnly: true,
       secure: true,
-      sameSite: "Lax",
+      sameSite: "None",
     });
     res.json({
       message: "signin successful",

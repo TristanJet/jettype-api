@@ -4,8 +4,6 @@ const helmet = require('helmet');
 const cors = require('cors');
 const cookieparser = require('cookie-parser')
 
-require('dotenv').config();
-
 const routes = require('./api/routes')
 
 const notFound = require('./api/middlewares/notfound');
@@ -17,7 +15,18 @@ app.use(morgan('dev'));
 
 app.use(helmet());
 
-app.use(cors());
+
+const whitelist = ['::1', 'http://127.0.0.1:5173', 'https://www.jettype.net']
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded());
