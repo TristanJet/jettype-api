@@ -1,12 +1,17 @@
-const http = require('http')
+//const http = require('http')
+const https = require('https')
 const WebSocket = require('ws')
+const fs = require('node:fs');
 
 const upgradeAuth = require('./websocket/auth')
 const wsServer = require('./websocket/wsServer.callback')
 const app = require('./app');
 
+const privateKey = fs.readFileSync('./127.0.0.1+1-key.pem');
+const certificate = fs.readFileSync('./127.0.0.1+1.pem');
 const port = process.env.PORT || 5000;
-const server = http.createServer(app);
+//const server = http.createServer(app);
+const server = https.createServer({key: privateKey, cert: certificate}, app);
 const wss = new WebSocket.Server({ noServer: true });
 
 wss.on('connection', wsServer)
@@ -40,6 +45,6 @@ server.on('upgrade', (request, socket, head) => {
 
 server.listen(port, () => {
   /* eslint-disable no-console */
-  console.log(`Listening: http://localhost:${port}`);
+  console.log(`Listening: https://localhost:${port}`);
   /* eslint-enable no-console */
 });
