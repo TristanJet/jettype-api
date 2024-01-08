@@ -28,16 +28,6 @@ router.post("/signin", validate(schemas.signupSchema), controllers.signin);
 
 router.get("/auth", controllers.auth)
 
-router.post("/gamestate", (req, res) => {
-  console.log(req.body);
-  res.json({
-    message: "post successful",
-    timestamp: new Date().toISOString(),
-    IP: req.ip,
-    URL: req.originalUrl,
-  });
-});
-
 //router.get('/user')
 
 module.exports = router;

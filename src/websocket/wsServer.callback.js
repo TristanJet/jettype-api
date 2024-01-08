@@ -42,6 +42,7 @@ const onMessage = async (ws, client, data, init) => {
       if (resp === quote.length) {
         const gameState = await checkGameState(client);
         if (gameState.join("") === quote) {
+          /* Win condition */
           console.log('WINN!!')
           const finishDate = Date.now()
           const startTime = await getStartTime(client)
