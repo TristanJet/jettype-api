@@ -31,7 +31,7 @@ const createSession = async (userId, sessionId) => {
       EX: 2600000
     }
   );
-  await client.HSET(
+  return await client.HSET(
     `user:${userId}`, 
     {
       sessionId: sessionId
@@ -41,6 +41,14 @@ const createSession = async (userId, sessionId) => {
 
 const pushGameState = async (sessionId, data) => {
   return await client.RPUSH(`gameState:${sessionId}`, data)
+}
+
+const setStartTime = async (sessionId, data) => {
+  return await client.SET(`startTime:${sessionId}`, data)
+}
+
+const getStartTime = async (sessionId) => {
+  return await client.GET(`startTime:${sessionId}`)
 }
 
 const popGameState = async (sessionId, data) => {
@@ -67,6 +75,8 @@ module.exports = {
   createUser,
   createSession,
   pushGameState,
+  setStartTime,
+  getStartTime,
   popGameState,
   checkGameState,
   getSessionId,
