@@ -28,6 +28,6 @@ router.post("/signin", validate(schemas.signupSchema), controllers.signin);
 
 router.get("/auth", controllers.auth)
 
-//router.get('/user')
+//router.get('/user') **Auth
 
 module.exports = router;

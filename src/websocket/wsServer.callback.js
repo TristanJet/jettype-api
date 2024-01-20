@@ -1,10 +1,11 @@
 const {
   pushGameState,
   setStartTime,
-  getStartTime,
   popGameState,
   checkGameState,
 } = require("../repository");
+
+const endGame = require('./endGame')
 
 var quote = "Theory can only take you so far.";
 
@@ -20,7 +21,7 @@ const wsServer = (ws, request, client) => {
     console.log(`${client} has disconnected`);
   });
 
-  const init = new Map();
+  const init = new Map(); // Add to redis?????
   ws.on("message", (data) => {
     data = JSON.parse(data);
     onMessage(ws, client, data, init);
@@ -41,14 +42,8 @@ const onMessage = async (ws, client, data, init) => {
       }
       if (resp === quote.length) {
         const gameState = await checkGameState(client);
-        if (gameState.join("") === quote) {
-          /* Win condition */
-          console.log('WINN!!')
-          const finishDate = Date.now()
-          const startTime = await getStartTime(client)
-          const finishTime = (finishDate - startTime)/1000
-          console.log(`${client} typed the quote correctly in ${finishTime} seconds!`);
-          //ws.send(`You typed the quote correctly in ${finishTime} seconds!`);
+        if (gameState.join("") === quote) { // Win condition!!
+          endGame(client)
         }
       }
     } else if (command.cmd === "DEL") {

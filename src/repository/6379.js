@@ -71,6 +71,19 @@ const sessionExists = async (sessionId) => {
   return await client.EXISTS(`session:${sessionId}`)
 }
 
+const getNameFromSession = async (sessionId) => {
+  const user = await client.GET(`session:${sessionId}`)
+  return await client.HGET(user, 'name')
+}
+
+const addLeaderboard = async (time, name) => {
+  return await client.ZADD('leaderboard', { score: time, value: name })
+}
+
+const getLeaderboard = async () => {
+  return await client.ZRANGE('leaderboard', 0, -1, { WITHSCORES: true })
+}
+
 module.exports = {
   createUser,
   createSession,
@@ -81,5 +94,8 @@ module.exports = {
   checkGameState,
   getSessionId,
   userExists,
-  sessionExists
+  sessionExists,
+  getNameFromSession,
+  addLeaderboard,
+  getLeaderboard
 };
