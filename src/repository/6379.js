@@ -59,6 +59,10 @@ const checkGameState = async (sessionId) => {
   return await client.LRANGE(`gameState:${sessionId}`, 0, -1)
 }
 
+const clearGameState = async (sessionId) => { // maybe not necessary to be here, for now; fine
+  return await client.RPOP_COUNT(`gameState:${sessionId}`, 32)
+}
+
 const getSessionId = async (userId) => {
   return await client.HGET(`user:${userId}`, 'sessionId')
 }
@@ -92,6 +96,7 @@ module.exports = {
   getStartTime,
   popGameState,
   checkGameState,
+  clearGameState,
   getSessionId,
   userExists,
   sessionExists,
