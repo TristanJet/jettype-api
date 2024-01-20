@@ -20,7 +20,7 @@ router.get("/", (req, res) => {
   });
 });
 
-//router.get('/leaderboard')
+router.get('/leaderboard', controllers.leaderboard)
 
 //router.get('/alltime')
 

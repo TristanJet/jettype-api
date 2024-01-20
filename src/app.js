@@ -15,7 +15,7 @@ app.use(morgan('dev'));
 
 app.use(helmet());
 
-
+/*
 const whitelist = ['::1', 'http://127.0.0.1:5173', 'https://www.jettype.net']
 const corsOptions = {
   origin: function (origin, callback) {
@@ -28,7 +28,7 @@ const corsOptions = {
   credentials: true,
 }
 app.use(cors(corsOptions));
-
+*/
 app.use(express.json());
 app.use(express.urlencoded());
 
