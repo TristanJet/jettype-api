@@ -5,7 +5,7 @@ const onWin = async (client) => {
   console.log('WINN!!')
   const finishDate = Date.now()
   const startTime = await getStartTime(client)
-  const finishTime = (finishDate - startTime)/1000
+  const finishTime = ((finishDate - startTime)/1000).toFixed(3)
   const name = await getNameFromSession(client)
   await addLeaderboard(finishTime, name)
   await clearGameState(client)
