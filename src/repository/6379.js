@@ -2,7 +2,12 @@ const redis = require("redis");
 
 const { exit } = require("node:process");
 
-let client = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST);
+let client = redis.createClient({
+  socket: {
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT
+  }
+});
 
 client.on("error", (err) => {
   console.log("Redis client error:", err);

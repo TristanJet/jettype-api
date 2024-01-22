@@ -82,4 +82,6 @@ src/websocket/obj.create.js
 
 /src/repository/redis-test.js
 
+nginx.conf
 
+nginx.current.conf
