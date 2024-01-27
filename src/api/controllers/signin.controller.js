@@ -10,7 +10,7 @@ const signincontroller = async (req, res, next) => {
       httpOnly: true,
       path: "/",
       secure: true,
-      sameSite: "Lax",
+      sameSite: "Strict",
     });
     res.json({
       message: "signin successful",
