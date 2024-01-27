@@ -8,9 +8,9 @@ const signincontroller = async (req, res, next) => {
     res.cookie("jet-session", sessionId, {
       maxAge: 2600000 * 1000,
       httpOnly: true,
-      domain: "jettype.net",
+      path: "/",
       secure: true,
-      sameSite: "Strict",
+      sameSite: "Lax",
     });
     res.json({
       message: "signin successful",
