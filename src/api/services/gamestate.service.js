@@ -1,6 +1,6 @@
-/* 
+/*
 
-Take commands 
+Take commands
 
 POST /gamestate
 header: sessionID
@@ -13,9 +13,6 @@ payload : {
 “num”: _int_}
 ]
 }
-
-
-
 
 if (Hincr nUpdate != "nupdate")
     return error

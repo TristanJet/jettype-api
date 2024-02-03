@@ -1,7 +1,5 @@
-const { nanoid } = require('nanoid')
+const { nanoid } = require('nanoid');
 
-const createId = () => {
-  return nanoid(8)
-}
+const createId = () => nanoid(8);
 
-module.exports = createId
+module.exports = createId;

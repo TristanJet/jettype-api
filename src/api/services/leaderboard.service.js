@@ -1,7 +1,5 @@
-const { getLeaderboard } = require("../../repository/6379");
+const { getLeaderboard } = require('../../repository/6379');
 
-const lbservice = async () => {
-  return await getLeaderboard();
-}
+const lbservice = async () => await getLeaderboard();
 
-module.exports = lbservice
+module.exports = lbservice;

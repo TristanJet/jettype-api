@@ -1,16 +1,16 @@
-const redis = require("redis");
+const redis = require('redis');
 
-const { exit } = require("node:process");
+const { exit } = require('node:process');
 
-let client = redis.createClient({
+const client = redis.createClient({
   socket: {
     host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT
-  }
+    port: process.env.REDIS_PORT,
+  },
 });
 
-client.on("error", (err) => {
-  console.log("Redis client error:", err);
+client.on('error', (err) => {
+  console.log('Redis client error:', err);
   exit(1);
 });
 
@@ -20,8 +20,8 @@ client.on("error", (err) => {
 
 const createUser = async (id, name, email) => {
   await client.HSET(`user:${id}`, {
-    name: name,
-    email: email,
+    name,
+    email,
     wpm: 0,
     totalCrowns: 0,
   });
@@ -32,59 +32,37 @@ const createSession = async (userId, sessionId) => {
     EX: 2600000,
   });
   return await client.HSET(`user:${userId}`, {
-    sessionId: sessionId,
+    sessionId,
   });
 };
 
-const pushGameState = async (sessionId, data) => {
-  return await client.RPUSH(`gameState:${sessionId}`, data);
-};
+const pushGameState = async (sessionId, data) => await client.RPUSH(`gameState:${sessionId}`, data);
 
-const setStartTime = async (sessionId, data) => {
-  return await client.SET(`startTime:${sessionId}`, data);
-};
+const setStartTime = async (sessionId, data) => await client.SET(`startTime:${sessionId}`, data);
 
-const getStartTime = async (sessionId) => {
-  return await client.GET(`startTime:${sessionId}`);
-};
+const getStartTime = async (sessionId) => await client.GET(`startTime:${sessionId}`);
 
-const popGameState = async (sessionId, data) => {
-  return await client.RPOP_COUNT(`gameState:${sessionId}`, data);
-};
+const popGameState = async (sessionId, data) => await client.RPOP_COUNT(`gameState:${sessionId}`, data);
 
-const checkGameState = async (sessionId) => {
-  return await client.LRANGE(`gameState:${sessionId}`, 0, -1);
-};
+const checkGameState = async (sessionId) => await client.LRANGE(`gameState:${sessionId}`, 0, -1);
 
-const clearGameState = async (sessionId) => {
+const clearGameState = async (sessionId) =>
   // maybe not necessary to be here, for now; fine
-  return await client.RPOP_COUNT(`gameState:${sessionId}`, 32);
-};
+  await client.RPOP_COUNT(`gameState:${sessionId}`, 32);
+const getSessionId = async (userId) => await client.HGET(`user:${userId}`, 'sessionId');
 
-const getSessionId = async (userId) => {
-  return await client.HGET(`user:${userId}`, "sessionId");
-};
+const userExists = async (id) => await client.EXISTS(`user:${id}`);
 
-const userExists = async (id) => {
-  return await client.EXISTS(`user:${id}`);
-};
-
-const sessionExists = async (sessionId) => {
-  return await client.EXISTS(`session:${sessionId}`);
-};
+const sessionExists = async (sessionId) => await client.EXISTS(`session:${sessionId}`);
 
 const getNameFromSession = async (sessionId) => {
   const user = await client.GET(`session:${sessionId}`);
-  return await client.HGET(user, "name");
+  return await client.HGET(user, 'name');
 };
 
-const addLeaderboard = async (time, name) => {
-  return await client.ZADD("leaderboard", { score: time, value: name });
-};
+const addLeaderboard = async (time, name) => await client.ZADD('leaderboard', { score: time, value: name });
 
-const getLeaderboard = async () => {
-  return await client.ZRANGE_WITHSCORES("leaderboard", 0, -1);
-};
+const getLeaderboard = async () => await client.ZRANGE_WITHSCORES('leaderboard', 0, -1);
 
 module.exports = {
   createUser,

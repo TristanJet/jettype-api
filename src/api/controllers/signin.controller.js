@@ -5,15 +5,15 @@ const signincontroller = async (req, res, next) => {
   try {
     const [userId, userExists] = await signin.user(req.body.credential);
     const sessionId = await signin.session(userId, userExists);
-    res.cookie("jet-session", sessionId, {
+    res.cookie('jet-session', sessionId, {
       maxAge: 2600000 * 1000,
       httpOnly: true,
-      path: "/",
+      path: '/',
       secure: true,
-      sameSite: "Strict",
+      sameSite: 'Strict',
     });
     res.json({
-      message: "signin successful",
+      message: 'signin successful',
       timestamp: new Date().toISOString(),
     });
   } catch (err) {
@@ -21,4 +21,4 @@ const signincontroller = async (req, res, next) => {
   }
 };
 
-module.exports = signincontroller
+module.exports = signincontroller;

@@ -1,4 +1,4 @@
-const lbservice = require("../services/leaderboard.service");
+const lbservice = require('../services/leaderboard.service');
 
 const lbcontroller = async (req, res, next) => {
   const arr = await lbservice();

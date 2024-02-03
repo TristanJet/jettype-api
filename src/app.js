@@ -2,12 +2,12 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
-const cookieparser = require('cookie-parser')
+const cookieparser = require('cookie-parser');
 
-const routes = require('./api/routes')
+const routes = require('./api/routes');
 
 const notFound = require('./api/middlewares/notfound');
-const errorHandler = require('./api/middlewares/errorhandler')
+const errorHandler = require('./api/middlewares/errorhandler');
 
 const app = express();
 
@@ -24,21 +24,21 @@ const corsOptions = {
     } else {
       callback(new Error('Not allowed by CORS'))
     }
-  }, 
+  },
   credentials: true,
 }
 app.use(cors(corsOptions));
 */
-app.use(cors())
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded());
 
-app.use(cookieparser())
+app.use(cookieparser());
 
 app.use('/api/v1', routes);
 
 app.use(notFound);
-app.use(errorHandler);  
+app.use(errorHandler);
 
 module.exports = app;

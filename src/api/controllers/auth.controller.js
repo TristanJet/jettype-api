@@ -1,16 +1,16 @@
-const { sessionExists } = require("../../repository");
+const { sessionExists } = require('../../repository');
 
 const authcontroller = async (req, res, next) => {
   try {
-    if (!req.cookies["jet-session"] || !(await sessionExists(req.cookies["jet-session"]))) {
+    if (!req.cookies['jet-session'] || !(await sessionExists(req.cookies['jet-session']))) {
       res.json({
-        message: "Unauthorized",
+        message: 'Unauthorized',
         timestamp: new Date().toISOString(),
       });
     } else {
       res.json({
-        message: "Authorized",
-        token: req.cookies["jet-session"],
+        message: 'Authorized',
+        token: req.cookies['jet-session'],
         timestamp: new Date().toISOString(),
       });
     }
