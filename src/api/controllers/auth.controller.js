@@ -10,6 +10,7 @@ const authcontroller = async (req, res, next) => {
     } else {
       res.json({
         message: "Authorized",
+        token: req.cookies["jet-session"],
         timestamp: new Date().toISOString(),
       });
     }
