@@ -6,15 +6,11 @@ const authcontroller = async (req, res, next) => {
       res.json({
         message: "Unauthorized",
         timestamp: new Date().toISOString(),
-        IP: req.ip,
-        URL: req.originalUrl,
       });
     } else {
       res.json({
         message: "Authorized",
         timestamp: new Date().toISOString(),
-        IP: req.ip,
-        URL: req.originalUrl,
       });
     }
   } catch (err) {

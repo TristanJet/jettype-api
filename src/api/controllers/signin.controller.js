@@ -15,8 +15,6 @@ const signincontroller = async (req, res, next) => {
     res.json({
       message: "signin successful",
       timestamp: new Date().toISOString(),
-      IP: req.ip,
-      URL: req.originalUrl,
     });
   } catch (err) {
     return next(err);
