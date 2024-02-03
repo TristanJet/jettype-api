@@ -4,8 +4,8 @@
   "description": "A basic starter for an express.js API",
   "main": "index.js",
   "scripts": {
-    "start": "node --env-file=.env src/server.js",
-    "dev": "nodemon --env-file=.env src/server.js",
+    "start": "node --env-file=.PROD.env src/server.js",
+    "dev": "nodemon --env-file=.DEV.env src/server.js",
     "lint": "eslint --fix src",
     "test": "jest"
   },
