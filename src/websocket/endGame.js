@@ -12,7 +12,10 @@ const onWin = async (client) => {
   await addLeaderboard(finishTime, name);
   await clearGameState(client);
   console.log(`${client} typed the quote correctly in ${finishTime} seconds!`);
-  // ws.send(`You typed the quote correctly in ${finishTime} seconds!`);
+  return {
+    name: name,
+    finishTime: finishTime,
+  }
 };
 
 module.exports = onWin;

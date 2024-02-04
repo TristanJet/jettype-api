@@ -3,6 +3,7 @@ const {
   setStartTime,
   popGameState,
   checkGameState,
+  clearGameState,
 } = require('../repository');
 
 const endGame = require('./endGame');
@@ -11,6 +12,7 @@ const quote = 'Theory can only take you so far.';
 
 const wsServer = (ws, request, client) => {
   console.log(`Connection gucci: ${client}`);
+  clearGameState(client)
 
   ws.on('error', (err) => {
     socket.destroy();
@@ -43,7 +45,8 @@ const onMessage = async (ws, client, data, init) => {
       if (resp === quote.length) {
         const gameState = await checkGameState(client);
         if (gameState.join('') === quote) { // Win condition!!
-          endGame(client);
+          const endData = await endGame(client);
+          ws.send(JSON.stringify(endData))
         }
       }
     } else if (command.cmd === 'DEL') {
