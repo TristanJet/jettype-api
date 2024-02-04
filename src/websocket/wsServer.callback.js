@@ -31,7 +31,6 @@ const wsServer = (ws, request, client) => {
 };
 
 const onMessage = async (ws, client, data, init) => {
-  console.log(`Message: ${data}, from client: ${client}`);
   let resp;
 
   for (const command of data.commands) {
@@ -53,7 +52,6 @@ const onMessage = async (ws, client, data, init) => {
     } else if (command.cmd === 'DEL') {
       resp = await popGameState(client, command.num);
     }
-    console.log(resp);
   }
 };
 
