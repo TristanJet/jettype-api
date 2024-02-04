@@ -13,6 +13,7 @@ const onWin = async (client) => {
   await clearGameState(client);
   console.log(`${client} typed the quote correctly in ${finishTime} seconds!`);
   return {
+    type: "FIN",
     name: name,
     finishTime: finishTime,
   }

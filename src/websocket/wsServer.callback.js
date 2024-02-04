@@ -46,6 +46,7 @@ const onMessage = async (ws, client, data, init) => {
         const gameState = await checkGameState(client);
         if (gameState.join('') === quote) { // Win condition!!
           const endData = await endGame(client);
+          init.set(client, false)
           ws.send(JSON.stringify(endData))
         }
       }
