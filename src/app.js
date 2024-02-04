@@ -15,21 +15,23 @@ app.use(morgan('dev'));
 
 app.use(helmet());
 
-/*
-const whitelist = ['::1', 'http://127.0.0.1:5173', 'https://www.jettype.net']
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  },
-  credentials: true,
+if (process.env.NODE_ENV === "development") {
+  const whitelist = ['::1', 'http://127.0.0.1:5174']
+  const corsOptions = {
+    origin: function (origin, callback) {
+      if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
+    credentials: true,
+  }
+  
+  app.use(cors(corsOptions));
+} else {
+  app.use(cors());
 }
-app.use(cors(corsOptions));
-*/
-app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded());
