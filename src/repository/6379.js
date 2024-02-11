@@ -46,9 +46,8 @@ const popGameState = async (sessionId, data) => await client.RPOP_COUNT(`gameSta
 
 const checkGameState = async (sessionId) => await client.LRANGE(`gameState:${sessionId}`, 0, -1);
 
-const clearGameState = async (sessionId) =>
-  // maybe not necessary to be here, for now; fine
-  await client.RPOP_COUNT(`gameState:${sessionId}`, 32);
+const clearGameState = async (sessionId) => await client.DEL(`gameState:${sessionId}`);
+
 const getSessionId = async (userId) => await client.HGET(`user:${userId}`, 'sessionId');
 
 const userExists = async (id) => await client.EXISTS(`user:${id}`);
