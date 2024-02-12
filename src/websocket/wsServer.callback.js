@@ -34,24 +34,25 @@ const onMessage = async (ws, client, data, init) => {
   let resp;
 
   for (const command of data.commands) {
-    if (command.cmd === 'ADD') {
-      resp = await pushGameState(client, command.val);
-      if (!init.get(client)) {
-        const startTime = Date.now();
-        await setStartTime(client, startTime);
-        init.set(client, true);
-      }
-      if (resp === quote.length) {
-        const gameState = await checkGameState(client);
-        if (gameState.join('') === quote) { // Win condition!!
-          const endData = await endGame(client);
-          init.set(client, false)
-          ws.send(JSON.stringify(endData))
+      if (command.cmd === 'ADD') {
+        resp = await pushGameState(client, command.val);
+        if (!init.get(client)) {
+          const startTime = Date.now();
+          await setStartTime(client, startTime);
+          init.set(client, true);
         }
+        if (resp === quote.length) {
+          const gameState = await checkGameState(client);
+          if (gameState.join('') === quote) { // Win condition!!
+            const endData = await endGame(client);
+            init.set(client, false)
+            ws.send(JSON.stringify(endData))
+            break;
+          }
+        }
+      } else if (command.cmd === 'DEL') {
+        resp = await popGameState(client, command.num);
       }
-    } else if (command.cmd === 'DEL') {
-      resp = await popGameState(client, command.num);
-    }
   }
 };
 
