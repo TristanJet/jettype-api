@@ -16,6 +16,24 @@ const wsServer = (ws, request, client) => {
   console.log(`Connection gucci: ${client}`);
   clearGameState(client)
 
+  let lastInteractionTime = Date.now();
+
+  const timeoutInterval =  60 * 1000; 
+
+  // Function to check for timeout
+  const checkTimeout = () => {
+    const now = Date.now()
+    ws.send('PING')
+    console.log('pinging')
+    if (now - lastInteractionTime > timeoutInterval) {
+      console.log(`${client} has been inactive for 2 minutes, closing connection.`);
+      ws.close(); // Close the connection
+    }    
+  };
+
+  // Set an interval to check for inactivity
+  const intervalId = setInterval(checkTimeout, 15 * 1000);
+
   ws.on('error', (err) => {
     socket.destroy();
     console.log(`Websocket error: ${err}`);
@@ -23,11 +41,17 @@ const wsServer = (ws, request, client) => {
 
   ws.on('close', () => {
     console.log(`${client} has disconnected`);
+    clearInterval(intervalId);
   });
 
   ws.on('message', (data) => {
-    data = JSON.parse(data);
-    onMessage(ws, client, data);
+    if (String(data) === 'PONG') {
+      console.log('HEre')
+    } else {
+      lastInteractionTime = Date.now();
+      data = JSON.parse(data);
+      onMessage(ws, client, data);
+    }
   });
 };
 
