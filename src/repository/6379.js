@@ -31,7 +31,9 @@ const createSession = async (userId, sessionId) => {
   await client.HSET(`session:${sessionId}`, {
     userId:`${userId}`,
     isStarted: 0,
-  }, {EX: 2600000,});
+  });
+
+  await client.PEXPIRE(`session:${sessionId}`, 2600000)
   return await client.HSET(`user:${userId}`, {
     sessionId,
   });
