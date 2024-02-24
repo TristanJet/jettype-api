@@ -30,7 +30,7 @@ const createUser = async (id, name, email) => {
 const createSession = async (userId, sessionId) => {
   await client.HSET(`session:${sessionId}`, {
     userId:`${userId}`,
-    isStarted: 0,
+    isStarted: 'false',
   });
 
   await client.PEXPIRE(`session:${sessionId}`, 2600000)
@@ -46,6 +46,12 @@ const setStartTime = async (sessionId, data) => await client.HSET(`session:${ses
 });
 
 const getStartTime = async (sessionId) => await client.HGET(`session:${sessionId}`, 'startTime');
+
+const getIsStarted = async (sessionId) => {return await client.HGET(`session:${sessionId}`, 'isStarted')};
+
+const setIsStarted = async (sessionId, state) => await client.HSET(`session:${sessionId}`, {
+  isStarted: state,
+});
 
 const popGameState = async (sessionId, data) => await client.RPOP_COUNT(`gameState:${sessionId}`, data);
 
@@ -74,6 +80,8 @@ module.exports = {
   pushGameState,
   setStartTime,
   getStartTime,
+  getIsStarted,
+  setIsStarted,
   popGameState,
   checkGameState,
   clearGameState,
