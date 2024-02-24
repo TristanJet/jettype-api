@@ -28,9 +28,10 @@ const createUser = async (id, name, email) => {
 };
 
 const createSession = async (userId, sessionId) => {
-  await client.SET(`session:${sessionId}`, `user:${userId}`, {
-    EX: 2600000,
-  });
+  await client.HSET(`session:${sessionId}`, {
+    userId:`${userId}`,
+    isStarted: 0,
+  }, {EX: 2600000,});
   return await client.HSET(`user:${userId}`, {
     sessionId,
   });
@@ -38,9 +39,11 @@ const createSession = async (userId, sessionId) => {
 
 const pushGameState = async (sessionId, data) => await client.RPUSH(`gameState:${sessionId}`, data);
 
-const setStartTime = async (sessionId, data) => await client.SET(`startTime:${sessionId}`, data);
+const setStartTime = async (sessionId, data) => await client.HSET(`session:${sessionId}`, {
+  startTime: data,
+});
 
-const getStartTime = async (sessionId) => await client.GET(`startTime:${sessionId}`);
+const getStartTime = async (sessionId) => await client.HGET(`session:${sessionId}`, 'startTime');
 
 const popGameState = async (sessionId, data) => await client.RPOP_COUNT(`gameState:${sessionId}`, data);
 
@@ -55,8 +58,8 @@ const userExists = async (id) => await client.EXISTS(`user:${id}`);
 const sessionExists = async (sessionId) => await client.EXISTS(`session:${sessionId}`);
 
 const getNameFromSession = async (sessionId) => {
-  const user = await client.GET(`session:${sessionId}`);
-  return await client.HGET(user, 'name');
+  const userId = await client.HGET(`session:${sessionId}`, 'userId');
+  return await client.HGET(`user:${userId}`, 'name');
 };
 
 const addLeaderboard = async (time, name) => await client.ZADD('leaderboard', { score: time, value: name });
