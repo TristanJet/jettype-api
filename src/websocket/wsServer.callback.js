@@ -11,6 +11,7 @@ const {
 const endGame = require('./endGame');
 
 const quote = 'Theory can only take you so far.';
+const words = quote.split(' ').length
 
 const wsServer = (ws, request, client) => {
   console.log(`Connection gucci: ${client}`);
@@ -18,21 +19,16 @@ const wsServer = (ws, request, client) => {
 
   let lastInteractionTime = Date.now();
 
-  const timeoutInterval =  60 * 1000; 
-
-  // Function to check for timeout
-  const checkTimeout = () => {
+  // Set an interval to check for inactivity
+  const intervalId = setInterval(() => {
     const now = Date.now()
     ws.send('PING')
     console.log('pinging')
-    if (now - lastInteractionTime > timeoutInterval) {
+    if (now - lastInteractionTime > 60 * 1000) {
       console.log(`${client} has been inactive for 2 minutes, closing connection.`);
       ws.close(); // Close the connection
     }    
-  };
-
-  // Set an interval to check for inactivity
-  const intervalId = setInterval(checkTimeout, 15 * 1000);
+  }, 15 * 1000);
 
   ws.on('error', (err) => {
     socket.destroy();
