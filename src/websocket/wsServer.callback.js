@@ -25,7 +25,7 @@ const wsServer = (ws, request, client) => {
     ws.send('PING')
     console.log('pinging')
     if (now - lastInteractionTime > 60 * 1000) {
-      console.log(`${client} has been inactive for 2 minutes, closing connection.`);
+      console.log(`${client} has been inactive for 1 minute, closing connection.`);
       ws.close(); // Close the connection
     }    
   }, 15 * 1000);
