@@ -8,10 +8,10 @@ const {
   clearGameState,
 } = require('../repository');
 
-const endGame = require('./endGame');
+const {onWin, addWpmAndAvg} = require('./endGame');
 
 const quote = 'Theory can only take you so far.';
-const words = quote.split(' ').length
+const wordCount = quote.split(' ').length
 
 const wsServer = (ws, request, client) => {
   console.log(`Connection gucci: ${client}`);
@@ -66,9 +66,10 @@ const onMessage = async (ws, client, data) => {
         if (resp === quote.length) {
           const gameState = await checkGameState(client);
           if (gameState.join('') === quote) { // Win condition!!
-            const endData = await endGame(client);
+            const endData = await onWin(client, wordCount);
             await setIsStarted(client, 'false')
             ws.send(JSON.stringify(endData))
+            addWpmAndAvg(client, endData.wpm)
             break;
           }
         }

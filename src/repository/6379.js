@@ -65,14 +65,27 @@ const userExists = async (id) => await client.EXISTS(`user:${id}`);
 
 const sessionExists = async (sessionId) => await client.EXISTS(`session:${sessionId}`);
 
-const getNameFromSession = async (sessionId) => {
-  const userId = await client.HGET(`session:${sessionId}`, 'userId');
-  return await client.HGET(`user:${userId}`, 'name');
-};
+const getUserIdFromSession = async (sessionId) => await client.HGET(`session:${sessionId}`, 'userId');
+
+const getNameFromUser = async (userId) => await client.HGET(`user:${userId}`, 'name');
 
 const addLeaderboard = async (time, name) => await client.ZADD('leaderboard', { score: time, value: name });
 
 const getLeaderboard = async () => await client.ZRANGE_WITHSCORES('leaderboard', 0, -1);
+
+const appendAllWpm = async (userId, num) => await client.RPUSH(`allWpm:${userId}`, num);
+
+const popAllWpm = async (userId) => await client.LPOP_COUNT(`allWpm:${userId}`, 10);
+
+const clearAllWpm = async (userId) => await client.DEL(`allWpm:${userId}`);
+
+const getAllWpm = async (userId) => await client.LRANGE(`allWpm:${userId}`, 0, -1);
+
+const updateAvgWpm = async (id, wpm) => {
+  await client.HSET(`user:${id}`, {
+    wpm: wpm,
+  });
+}
 
 module.exports = {
   createUser,
@@ -88,7 +101,13 @@ module.exports = {
   getSessionId,
   userExists,
   sessionExists,
-  getNameFromSession,
+  getUserIdFromSession,
+  getNameFromUser,
   addLeaderboard,
   getLeaderboard,
+  appendAllWpm,
+  popAllWpm,
+  clearAllWpm,
+  getAllWpm,
+  updateAvgWpm,
 };
