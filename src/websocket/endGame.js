@@ -32,7 +32,7 @@ const onWin = async (client, wordCount) => {
 
 const addWpmAndAvg = async (client, wpm) => {
   const userId = await getUserIdFromSession(client);
-  const respLen = Number(await appendAllWpm(userId, wpm));
+  const respLen = await appendAllWpm(userId, wpm);
   if (respLen === 110) {
     await popAllWpm(userId);
   }

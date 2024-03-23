@@ -52,13 +52,11 @@ const wsServer = (ws, request, client) => {
 };
 
 const onMessage = async (ws, client, data) => {
-  let resp;
 
   for (const command of data.commands) {
       if (command.cmd === 'ADD') {
-        resp = await pushGameState(client, command.val); //if resp == 1, then start timer
-        const isStarted = await getIsStarted(client)
-        if (isStarted === 'false') {
+        const resp = await pushGameState(client, command.val); //if resp == 1, then start timer
+        if (resp === 1) {
           const startTime = Date.now();
           await setStartTime(client, startTime);
           await setIsStarted(client, 'true')
@@ -74,7 +72,7 @@ const onMessage = async (ws, client, data) => {
           }
         }
       } else if (command.cmd === 'DEL') {
-        resp = await popGameState(client, command.num);
+        await popGameState(client, command.num);
       }
   }
 };
