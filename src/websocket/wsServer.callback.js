@@ -56,7 +56,7 @@ const onMessage = async (ws, client, data) => {
 
   for (const command of data.commands) {
       if (command.cmd === 'ADD') {
-        resp = await pushGameState(client, command.val);
+        resp = await pushGameState(client, command.val); //if resp == 1, then start timer
         const isStarted = await getIsStarted(client)
         if (isStarted === 'false') {
           const startTime = Date.now();

@@ -33,7 +33,7 @@ const createSession = async (userId, sessionId) => {
     isStarted: 'false',
   });
 
-  await client.PEXPIRE(`session:${sessionId}`, 2600000)
+  await client.EXPIRE(`session:${sessionId}`, 2600000)
   return await client.HSET(`user:${userId}`, {
     sessionId,
   });
