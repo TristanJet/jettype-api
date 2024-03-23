@@ -15,7 +15,7 @@ const wsServer = (ws, request, client) => {
   console.log(`Connection gucci: ${client}`);
   clearGameState(client)
 
-  let lastInteractionTime = Date.now();
+  let lastInteractionTime;
 
   // Set an interval to check for inactivity
   const intervalId = setInterval(() => {
@@ -38,14 +38,31 @@ const wsServer = (ws, request, client) => {
     clearInterval(intervalId);
   });
 
+  let hastyInputs = 0;
   ws.on('message', (data) => {
+    const now = Date.now()
     if (String(data) === 'PONG') {
       console.log('HEre')
-    } else {
-      lastInteractionTime = Date.now();
-      data = JSON.parse(data);
-      onMessage(ws, client, data);
+      return
     }
+    const timeSince = now - lastInteractionTime
+    console.log(timeSince)
+    if (timeSince < 90) {//This is somewhat arbitrary, might break
+      hastyInputs += 1;
+      console.log(`quick: ${hastyInputs}`)
+      if (hastyInputs > 3) {
+        ws.close()
+        console.log(`Input too quick!`)
+        return
+      }
+    } else {
+      if (hastyInputs) {
+        hastyInputs = 0
+      }
+    }
+    lastInteractionTime = now;
+    data = JSON.parse(data);
+    onMessage(ws, client, data);
   });
 };
 
