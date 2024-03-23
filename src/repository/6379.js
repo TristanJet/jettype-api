@@ -47,12 +47,6 @@ const setStartTime = async (sessionId, data) => await client.HSET(`session:${ses
 
 const getStartTime = async (sessionId) => await client.HGET(`session:${sessionId}`, 'startTime');
 
-const getIsStarted = async (sessionId) => {return await client.HGET(`session:${sessionId}`, 'isStarted')};
-
-const setIsStarted = async (sessionId, state) => await client.HSET(`session:${sessionId}`, {
-  isStarted: state,
-});
-
 const popGameState = async (sessionId, data) => await client.RPOP_COUNT(`gameState:${sessionId}`, data);
 
 const checkGameState = async (sessionId) => await client.LRANGE(`gameState:${sessionId}`, 0, -1);
@@ -93,8 +87,6 @@ module.exports = {
   pushGameState,
   setStartTime,
   getStartTime,
-  getIsStarted,
-  setIsStarted,
   popGameState,
   checkGameState,
   clearGameState,

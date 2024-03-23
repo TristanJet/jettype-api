@@ -1,8 +1,6 @@
 const {
   pushGameState,
   setStartTime,
-  getIsStarted,
-  setIsStarted,
   popGameState,
   checkGameState,
   clearGameState,
@@ -59,13 +57,11 @@ const onMessage = async (ws, client, data) => {
         if (resp === 1) {
           const startTime = Date.now();
           await setStartTime(client, startTime);
-          await setIsStarted(client, 'true')
         }
         if (resp === quote.length) {
           const gameState = await checkGameState(client);
           if (gameState.join('') === quote) { // Win condition!!
             const endData = await onWin(client, wordCount);
-            await setIsStarted(client, 'false')
             ws.send(JSON.stringify(endData))
             addWpmAndAvg(client, endData.wpm)
             break;
