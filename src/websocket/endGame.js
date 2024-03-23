@@ -20,7 +20,7 @@ const onWin = async (client, wordCount) => {
   const name = await getNameFromUser(userId);
   await addLeaderboard(finishTime, name);
   await clearGameState(client);
-  const wpm = ((wordCount / finishTime) * 60).toFixed(1);
+  const wpm = (wordCount / (finishTime / 60)).toFixed(1);
   console.log(`${client} typed the quote correctly in ${finishTime} seconds, with a avg wpm of: ${wpm}!`);
   return {
     type: "FIN",
