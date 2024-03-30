@@ -46,10 +46,8 @@ const wsServer = (ws, request, client) => {
       return
     }
     const timeSince = now - lastInteractionTime
-    console.log(timeSince)
-    if (timeSince < 90) {//This is somewhat arbitrary, might break
+    if (timeSince < 80) {//This is somewhat arbitrary, might break
       hastyInputs += 1;
-      console.log(`quick: ${hastyInputs}`)
       if (hastyInputs > 3) {
         ws.close()
         console.log(`Input too quick!`)
