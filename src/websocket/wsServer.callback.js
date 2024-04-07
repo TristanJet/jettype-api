@@ -82,8 +82,14 @@ const onMessage = async (ws, client, data) => {
             break;
           }
         }
+        if (resp > quote.length) {
+          ws.close()
+        }
       } else if (command.cmd === 'DEL') {
-        await popGameState(client, command.num);
+        const resp = await popGameState(client, command.num);
+        if (!resp) {
+          ws.close()
+        }
       }
   }
 };
