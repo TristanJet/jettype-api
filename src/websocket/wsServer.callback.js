@@ -8,6 +8,8 @@ const {
 
 const {onWin, addWpmAndAvg} = require('./endGame');
 
+const messageSchema = require('./msgValidation')
+
 const quote = 'Theory can only take you so far.';
 const wordCount = quote.split(' ').length
 
@@ -24,7 +26,8 @@ const wsServer = (ws, request, client) => {
     console.log('pinging')
     if (now - lastInteractionTime > 60 * 1000) {
       console.log(`${client} has been inactive for 1 minute, closing connection.`);
-      ws.close(); // Close the connection
+      ws.close();
+      return // Close the connection
     }    
   }, 15 * 1000);
 
@@ -60,6 +63,13 @@ const wsServer = (ws, request, client) => {
     }
     lastInteractionTime = now;
     data = JSON.parse(data);
+    console.log(data)
+    const validResp = messageSchema.validate(data)
+    if (validResp.error) {
+      console.log('Validation error!')
+      ws.close()
+      return
+    }
     onMessage(ws, client, data);
   });
 };
