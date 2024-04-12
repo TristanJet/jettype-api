@@ -96,10 +96,10 @@ const onMessage = async (ws, client, data) => {
           ws.close()
         }
       } else if (command.cmd === 'DEL') {
-        const resp = await popGameState(client, command.num);
-        if (!resp) {
-          ws.close()
-        }
+          const resp = await popGameState(client, command.num);
+          if (!resp) {
+            ws.close()
+          }
       }
   }
 };
