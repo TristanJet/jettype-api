@@ -65,6 +65,8 @@ const getNameFromUser = async (userId) => await client.HGET(`user:${userId}`, 'n
 
 const addLeaderboard = async (time, name) => await client.ZADD('leaderboard', { score: time, value: name });
 
+const getScore = async (name) => await client.ZSCORE('leaderboard', name);
+
 const getLeaderboard = async () => await client.ZRANGE_WITHSCORES('leaderboard', 0, -1);
 
 const appendAllWpm = async (userId, num) => await client.RPUSH(`allWpm:${userId}`, num);
@@ -96,6 +98,7 @@ module.exports = {
   getUserIdFromSession,
   getNameFromUser,
   addLeaderboard,
+  getScore,
   getLeaderboard,
   appendAllWpm,
   popAllWpm,

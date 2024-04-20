@@ -22,7 +22,7 @@ const wsServer = (ws, request, client) => {
   // Set an interval to check for inactivity
   const intervalId = setInterval(() => {
     const now = Date.now()
-    ws.send('PING')
+    ws.send('PING') //why do I even need ping ?
     console.log('pinging')
     if (now - lastInteractionTime > 60 * 1000) {
       console.log(`${client} has been inactive for 1 minute, closing connection.`);

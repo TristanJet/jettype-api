@@ -4,6 +4,7 @@ const {
   getUserIdFromSession,
   getNameFromUser,
   addLeaderboard,
+  getScore,
   appendAllWpm,
   popAllWpm,
   getAllWpm,
@@ -18,7 +19,10 @@ const onWin = async (client, wordCount) => {
   const finishTime = ((finishDate - startTime) / 1000).toFixed(3);
   const userId = await getUserIdFromSession(client);
   const name = await getNameFromUser(userId);
-  await addLeaderboard(finishTime, name);
+  const bestTime = await getScore(name)
+  if (bestTime > finishTime) {
+    await addLeaderboard(finishTime, name);
+  }
   await clearGameState(client);
   const wpm = (wordCount / (finishTime / 60)).toFixed(1);
   console.log(`${client} typed the quote correctly in ${finishTime} seconds, with a avg wpm of: ${wpm}!`);
