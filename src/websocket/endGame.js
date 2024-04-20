@@ -19,13 +19,13 @@ const onWin = async (client, wordCount) => {
   const finishTime = ((finishDate - startTime) / 1000).toFixed(3);
   const userId = await getUserIdFromSession(client);
   const name = await getNameFromUser(userId);
-  const bestTime = await getScore(name)
+  const bestTime = await getScore(name) //Should this really be attached to the leaderboard object? Or should I store it in user.
   if (bestTime > finishTime) {
     await addLeaderboard(finishTime, name);
   }
   await clearGameState(client);
   const wpm = (wordCount / (finishTime / 60)).toFixed(1);
-  console.log(`${client} typed the quote correctly in ${finishTime} seconds, with a avg wpm of: ${wpm}!`);
+  console.log(`${client} typed the quote correctly in ${finishTime} seconds, with a wpm of: ${wpm}!`);
   return {
     type: "FIN",
     name: name,

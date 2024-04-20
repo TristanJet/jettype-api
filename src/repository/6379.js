@@ -22,7 +22,7 @@ const createUser = async (id, name, email) => {
   await client.HSET(`user:${id}`, {
     name,
     email,
-    wpm: 0,
+    avgWPM: 0,
     totalCrowns: 0,
   });
 };
@@ -79,7 +79,7 @@ const getAllWpm = async (userId) => await client.LRANGE(`allWpm:${userId}`, 0, -
 
 const updateAvgWpm = async (id, wpm) => {
   await client.HSET(`user:${id}`, {
-    wpm: wpm,
+    avgWPM: wpm,
   });
 }
 
