@@ -45,7 +45,7 @@ const wsServer = (ws, request, client) => {
   ws.on('message', (data) => {
     const now = Date.now()
     if (String(data) === 'PONG') {
-      console.log('HEre')
+      console.log('Ponged')
       return
     }
     const timeSince = now - lastInteractionTime
@@ -92,7 +92,9 @@ const onMessage = async (ws, client, data) => {
             break;
           }
         }
-        if (resp > quote.length) {
+        if (resp > quote.length) { /*
+         maybe I should change all of these to else if, maybe it fixes mums problem? Is the socket closing before end message received?
+         */
           ws.close()
         }
       } else if (command.cmd === 'DEL') {

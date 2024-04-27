@@ -16,7 +16,7 @@ const onWin = async (client, wordCount) => {
   console.log("WINN!!");
   const finishDate = Date.now();
   const startTime = await getStartTime(client);
-  const finishTime = ((finishDate - startTime) / 1000).toFixed(3);
+  const finishTime = ((finishDate - startTime) / 1000).toFixed(1);
   const userId = await getUserIdFromSession(client);
   const name = await getNameFromUser(userId);
   const bestTime = await getScore(name) //Should this really be attached to the leaderboard object? Or should I store it in user.
