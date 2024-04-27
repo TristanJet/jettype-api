@@ -82,8 +82,7 @@ const onMessage = async (ws, client, data) => {
         if (resp === 1) {
           const startTime = Date.now();
           await setStartTime(client, startTime);
-        }
-        if (resp === quote.length) {
+        } else if (resp === quote.length) {
           const gameState = await checkGameState(client);
           if (gameState.join('') === quote) { // Win condition!!
             const endData = await onWin(client, wordCount);
@@ -91,10 +90,7 @@ const onMessage = async (ws, client, data) => {
             addWpmAndAvg(client, endData.wpm)
             break;
           }
-        }
-        if (resp > quote.length) { /*
-         maybe I should change all of these to else if, maybe it fixes mums problem? Is the socket closing before end message received?
-         */
+        } else if (resp > quote.length) { 
           ws.close()
         }
       } else if (command.cmd === 'DEL') {
