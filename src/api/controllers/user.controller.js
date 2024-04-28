@@ -5,9 +5,11 @@ const userController = async (req, res, next) => {
   const [name, avgWPM, totalCrowns] = await userService(sessionToken);
   try {
     res.json({
-      name: name,
-      avgWPM: avgWPM,
-      totalCrowns: totalCrowns,
+      content: {
+        name: name,
+        avgWPM: avgWPM,
+        totalCrowns: totalCrowns,
+      },
       timestamp: new Date().toISOString(),
     });
   } catch (err) {
