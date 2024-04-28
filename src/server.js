@@ -7,17 +7,13 @@ const app = require('./app');
 
 const port = process.env.PORT || 5000;
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ noServer: true });
+const wss = new WebSocket.Server({ noServer: true, clientTracking: true});
 
 wss.on('connection', wsServer)
 
 server.on('upgrade', (request, socket, head) => {
-  console.log(`Upgrade request URL: ${request.url}`); // Log the request URL
 
   try {
-    const pathname = request.url;
-    console.log(`Attempting to upgrade for path: ${pathname}`); // Confirm the path being checked
-
     const parsedMsg = new URL(request.url, 'http://localhost:5000');
 
     if (parsedMsg.pathname === '/ws') {
@@ -26,7 +22,8 @@ server.on('upgrade', (request, socket, head) => {
         .then(token => {
           console.log('Authentication successful', token); // Log on successful auth
           wss.handleUpgrade(request, socket, head, (ws) => {
-            wss.emit('connection', ws, request, token);
+            wss.emit('connection', ws, socket, token, () => wss.clients.size);
+            console.log(`Clients: ${wss.clients.size}`)
           });
         })
         .catch(error => { // Catch and log any error from the promise
