@@ -6,9 +6,11 @@ const userController = async (req, res, next) => {
   try {
     res.json({
       content: {
-        name: name,
-        avgWPM: avgWPM,
-        totalCrowns: totalCrowns,
+        username: name,
+        data: {
+          avgWPM: avgWPM,
+          totalCrowns: totalCrowns,
+        }
       },
       timestamp: new Date().toISOString(),
     });
