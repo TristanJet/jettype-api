@@ -27,6 +27,8 @@ const createUser = async (id, name, email) => {
   });
 };
 
+const getUserData = async (id) => await client.HMGET(`user:${id}`, ['name', 'avgWPM', 'totalCrowns'])
+
 const createSession = async (userId, sessionId) => {
   await client.HSET(`session:${sessionId}`, {
     userId:`${userId}`,
@@ -85,6 +87,7 @@ const updateAvgWpm = async (id, wpm) => {
 
 module.exports = {
   createUser,
+  getUserData,
   createSession,
   pushGameState,
   setStartTime,

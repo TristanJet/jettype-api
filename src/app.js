@@ -16,7 +16,7 @@ app.use(morgan('dev'));
 app.use(helmet());
 
 if (process.env.NODE_ENV === "development") {
-  const whitelist = ['::1', 'http://127.0.0.1:5174']
+  const whitelist = ['http://127.0.0.1:5174', "http://192.168.16.1:5000"]
   const corsOptions = {
     origin: function (origin, callback) {
       if (whitelist.indexOf(origin) !== -1) {

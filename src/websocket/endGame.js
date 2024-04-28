@@ -45,7 +45,7 @@ const addWpmAndAvg = async (client, wpm) => {
 
     const arrayAsFloats = all.map((item) => parseFloat(item));
 
-    const average = arrayAsFloats.reduce((acc, val) => acc + val, 0) / arrayAsFloats.length;
+    const average = (arrayAsFloats.reduce((acc, val) => acc + val, 0) / arrayAsFloats.length).toFixed(1);
     console.log(average)
 
     await updateAvgWpm(userId, average)
