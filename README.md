@@ -1,4 +1,4 @@
-### Http and Websocket API for jettype.net
+# Http and Websocket API for jettype.net
 
 Websocket uses "ws", and http uses "express".
 

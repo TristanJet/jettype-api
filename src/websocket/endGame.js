@@ -9,17 +9,17 @@ const {
   popAllWpm,
   getAllWpm,
   updateAvgWpm,
-} = require("../repository");
+} = require('../repository');
 
 const onWin = async (client, wordCount) => {
   /* Win condition */
-  console.log("WINN!!");
+  console.log('WINN!!');
   const finishDate = Date.now();
   const startTime = await getStartTime(client);
   const finishTime = ((finishDate - startTime) / 1000).toFixed(1);
   const userId = await getUserIdFromSession(client);
   const name = await getNameFromUser(userId);
-  const bestTime = await getScore(name) //Should this really be attached to the leaderboard object? Or should I store it in user.
+  const bestTime = await getScore(name); // Should this really be attached to the leaderboard object? Or should I store it in user.
   if (bestTime > finishTime) {
     await addLeaderboard(finishTime, name);
   }
@@ -27,10 +27,10 @@ const onWin = async (client, wordCount) => {
   const wpm = (wordCount / (finishTime / 60)).toFixed(1);
   console.log(`${client} typed the quote correctly in ${finishTime} seconds, with a wpm of: ${wpm}!`);
   return {
-    type: "FIN",
-    name: name,
-    finishTime: finishTime,
-    wpm: wpm,
+    type: 'FIN',
+    name,
+    finishTime,
+    wpm,
   };
 };
 
@@ -46,9 +46,9 @@ const addWpmAndAvg = async (client, wpm) => {
     const arrayAsFloats = all.map((item) => parseFloat(item));
 
     const average = (arrayAsFloats.reduce((acc, val) => acc + val, 0) / arrayAsFloats.length).toFixed(1);
-    console.log(average)
+    console.log(average);
 
-    await updateAvgWpm(userId, average)
+    await updateAvgWpm(userId, average);
   }
 };
 

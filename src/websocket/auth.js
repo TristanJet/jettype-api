@@ -1,14 +1,13 @@
 const { sessionExists } = require('../repository');
 
 const upgradeAuth = (queryString) => new Promise(async (resolve, reject) => {
-
   if (!queryString) {
-    return reject('No query string')
+    return reject('No query string');
   }
 
   const params = new URLSearchParams(queryString);
   // Extract the value of "jet-token" or return false if it's not found
-  
+
   if (!params.has('jet-token')) {
     return reject('Incorrect params');
   }

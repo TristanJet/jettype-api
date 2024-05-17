@@ -1,4 +1,4 @@
-const userService = require('../services/user.service')
+const userService = require('../services/user.service');
 
 const userController = async (req, res, next) => {
   const sessionToken = req.cookies['jet-session'];
@@ -8,9 +8,9 @@ const userController = async (req, res, next) => {
       content: {
         username: name,
         data: {
-          avgWPM: avgWPM,
-          totalCrowns: totalCrowns,
-        }
+          avgWPM,
+          totalCrowns,
+        },
       },
       timestamp: new Date().toISOString(),
     });

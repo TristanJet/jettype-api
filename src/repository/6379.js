@@ -27,15 +27,24 @@ const createUser = async (id, name, email) => {
   });
 };
 
-const getUserData = async (id) => await client.HMGET(`user:${id}`, ['name', 'avgWPM', 'totalCrowns'])
+const createGuestUser = async (id) => {
+  await client.HSET(`user:${id}`, {
+    avgWPM: 0,
+    totalCrowns: 0,
+  });
+  await client.EXPIRE(`user:${id}`, 600000);
+};
+
+const getUserData = async (id) => await client.HMGET(`user:${id}`, ['name', 'avgWPM', 'totalCrowns']);
 
 const createSession = async (userId, sessionId) => {
   await client.HSET(`session:${sessionId}`, {
-    userId:`${userId}`,
+    userId: `${userId}`,
     isStarted: 'false',
+    startTime: 0
   });
 
-  await client.EXPIRE(`session:${sessionId}`, 2600000)
+  await client.EXPIRE(`session:${sessionId}`, 2600000);
   return await client.HSET(`user:${userId}`, {
     sessionId,
   });
@@ -83,10 +92,11 @@ const updateAvgWpm = async (id, wpm) => {
   await client.HSET(`user:${id}`, {
     avgWPM: wpm,
   });
-}
+};
 
 module.exports = {
   createUser,
+  createGuestUser,
   getUserData,
   createSession,
   pushGameState,

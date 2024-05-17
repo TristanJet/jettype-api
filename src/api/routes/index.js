@@ -4,7 +4,7 @@ const schemas = require('../schemas');
 
 const validate = require('../middlewares/validate');
 
-const auth = require('../middlewares/auth')
+const auth = require('../middlewares/auth');
 
 const controllers = require('../controllers');
 
@@ -30,6 +30,6 @@ router.post('/signin', validate(schemas.signupSchema), controllers.signin);
 
 router.get('/auth', controllers.auth);
 
-router.get('/user', auth, controllers.user)
+router.get('/user', auth, controllers.user);
 
 module.exports = router;
