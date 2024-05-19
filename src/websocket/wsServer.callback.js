@@ -1,6 +1,6 @@
 const {
   pushGameState,
-  setStartTime,
+  setStartDate,
   popGameState,
   checkGameState,
   clearGameState,
@@ -74,7 +74,7 @@ const onMessage = async (ws, client, data) => {
       const resp = await pushGameState(client, command.val); // if resp == 1, then start timer
       if (resp === 1) {
         const startTime = Date.now();
-        await setStartTime(client, startTime);
+        await setStartDate(client, startTime);
       } else if (resp === quote.length) {
         const gameState = await checkGameState(client);
         if (gameState.join('') === quote) {

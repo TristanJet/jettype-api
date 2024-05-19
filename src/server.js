@@ -32,6 +32,7 @@ server.on('upgrade', (request, socket, head) => {
         });
     } else {
       console.log('Unauthorized connection attempted - pathname mismatch');
+      console.log(parsedMsg);
       socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
       socket.destroy();
     }

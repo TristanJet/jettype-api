@@ -6,7 +6,11 @@ const errorHandler = (err, req, res, next) => {
     message: err.message,
     stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
   });
-  console.log(err.message);
+  if (statusCode === 500) {
+    console.log(`Server error: ${err.message}`);
+  } else {
+    console.log(`Client error: ${err.message}`);
+  }
 };
 
 module.exports = errorHandler;

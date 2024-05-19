@@ -18,8 +18,9 @@ client.on('error', (err) => {
   await client.connect();
 })();
 
-const createUser = async (id, name, email) => {
+const createSignedUser = async (id, name, email) => {
   await client.HSET(`user:${id}`, {
+    authType: 'signed',
     name,
     email,
     avgWPM: 0,
@@ -28,35 +29,43 @@ const createUser = async (id, name, email) => {
 };
 
 const createGuestUser = async (id) => {
-  await client.HSET(`user:${id}`, {
+  const setresp = await client.HSET(`user:${id}`, {
+    authType: 'guest',
     avgWPM: 0,
     totalCrowns: 0,
   });
-  await client.EXPIRE(`user:${id}`, 600000);
+  const expresp = await client.EXPIRE(`user:${id}`, 600000);
+  if (setresp && expresp) {
+    return 1;
+  }
+  return 0;
 };
 
 const getUserData = async (id) => await client.HMGET(`user:${id}`, ['name', 'avgWPM', 'totalCrowns']);
 
 const createSession = async (userId, sessionId) => {
-  await client.HSET(`session:${sessionId}`, {
+  const sessionSetResp = await client.HSET(`session:${sessionId}`, {
     userId: `${userId}`,
     isStarted: 'false',
-    startTime: 0
+    startDate: 0,
   });
-
-  await client.EXPIRE(`session:${sessionId}`, 2600000);
-  return await client.HSET(`user:${userId}`, {
+  const sessionExpResp = await client.EXPIRE(`session:${sessionId}`, 2600000);
+  const linkSeshUserResp = await client.HSET(`user:${userId}`, {
     sessionId,
   });
+  if ((sessionSetResp && sessionExpResp) && linkSeshUserResp) {
+    return 1;
+  }
+  return 0;
 };
 
 const pushGameState = async (sessionId, data) => await client.RPUSH(`gameState:${sessionId}`, data);
 
-const setStartTime = async (sessionId, data) => await client.HSET(`session:${sessionId}`, {
-  startTime: data,
+const setStartDate = async (sessionId, data) => await client.HSET(`session:${sessionId}`, {
+  startDate: data,
 });
 
-const getStartTime = async (sessionId) => await client.HGET(`session:${sessionId}`, 'startTime');
+const getStartDate = async (sessionId) => await client.HGET(`session:${sessionId}`, 'startDate');
 
 const popGameState = async (sessionId, data) => await client.RPOP_COUNT(`gameState:${sessionId}`, data);
 
@@ -72,7 +81,13 @@ const sessionExists = async (sessionId) => await client.EXISTS(`session:${sessio
 
 const getUserIdFromSession = async (sessionId) => await client.HGET(`session:${sessionId}`, 'userId');
 
+const finishTimeToSession = async (sessionId, finishTime) => client.HSET(`session:${sessionId}`, {
+  finishTime,
+});
+
 const getNameFromUser = async (userId) => await client.HGET(`user:${userId}`, 'name');
+
+const getAuthTypeFromUser = async (userId) => await client.HGET(`user:${userId}`, 'authType');
 
 const addLeaderboard = async (time, name) => await client.ZADD('leaderboard', { score: time, value: name });
 
@@ -95,13 +110,13 @@ const updateAvgWpm = async (id, wpm) => {
 };
 
 module.exports = {
-  createUser,
+  createSignedUser,
   createGuestUser,
   getUserData,
   createSession,
   pushGameState,
-  setStartTime,
-  getStartTime,
+  setStartDate,
+  getStartDate,
   popGameState,
   checkGameState,
   clearGameState,
@@ -109,7 +124,9 @@ module.exports = {
   userExists,
   sessionExists,
   getUserIdFromSession,
+  finishTimeToSession,
   getNameFromUser,
+  getAuthTypeFromUser,
   addLeaderboard,
   getScore,
   getLeaderboard,
