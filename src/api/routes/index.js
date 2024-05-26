@@ -32,4 +32,6 @@ router.get('/auth', controllers.auth);
 
 router.get('/user', auth, controllers.user);
 
+router.post('/user', auth, validate(schemas.nameSchema), controllers.userPost);
+
 module.exports = router;

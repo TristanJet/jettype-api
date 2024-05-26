@@ -31,6 +31,7 @@ const createSignedUser = async (id, name, email) => {
 const createGuestUser = async (id) => {
   const setresp = await client.HSET(`user:${id}`, {
     authType: 'guest',
+    name: '',
     avgWPM: 0,
     totalCrowns: 0,
   });
@@ -40,6 +41,8 @@ const createGuestUser = async (id) => {
   }
   return 0;
 };
+
+const addUserName = async (id, name) => await client.HSET(`user:${id}`, { name });
 
 const getUserData = async (id) => await client.HMGET(`user:${id}`, ['name', 'avgWPM', 'totalCrowns']);
 
@@ -112,6 +115,7 @@ const updateAvgWpm = async (id, wpm) => {
 module.exports = {
   createSignedUser,
   createGuestUser,
+  addUserName,
   getUserData,
   createSession,
   pushGameState,

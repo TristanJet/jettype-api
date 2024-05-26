@@ -6,6 +6,11 @@ const signupSchema = Joi.object({
   select_by: Joi.string().valid('btn', 'btn_confirm').required(),
 });
 
+const nameSchema = Joi.object({
+  name: Joi.string().min(4).max(10).required(),
+});
+
 module.exports = {
   signupSchema,
+  nameSchema,
 };
