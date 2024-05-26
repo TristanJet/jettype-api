@@ -7,7 +7,7 @@ const signupSchema = Joi.object({
 });
 
 const nameSchema = Joi.object({
-  name: Joi.string().min(4).max(10).required(),
+  name: Joi.string().min(3).max(10).required(),
 });
 
 module.exports = {
