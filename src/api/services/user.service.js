@@ -1,4 +1,4 @@
-const { getUserIdFromSession, addUserName, getUserData } = require('../../repository/6379');
+const { getUserIdFromSession, addUserName, getUserData, getFinishTimeSession, addLeaderboard } = require('../../repository/6379');
 
 const userService = async (session) => {
   const userId = await getUserIdFromSession(session);
@@ -7,7 +7,9 @@ const userService = async (session) => {
 
 const userPostService = async (session, name) => {
   const userId = await getUserIdFromSession(session);
-  return await addUserName(userId, name);
+  await addUserName(userId, name);
+  const finishTime = await getFinishTimeSession(session);
+  await addLeaderboard(finishTime, name);
 };
 
 module.exports = {

@@ -88,6 +88,8 @@ const finishTimeToSession = async (sessionId, finishTime) => client.HSET(`sessio
   finishTime,
 });
 
+const getFinishTimeSession = async (sessionId) => client.HGET(`session:${sessionId}`, 'finishTime')
+
 const getNameFromUser = async (userId) => await client.HGET(`user:${userId}`, 'name');
 
 const getAuthTypeFromUser = async (userId) => await client.HGET(`user:${userId}`, 'authType');
@@ -129,6 +131,7 @@ module.exports = {
   sessionExists,
   getUserIdFromSession,
   finishTimeToSession,
+  getFinishTimeSession,
   getNameFromUser,
   getAuthTypeFromUser,
   addLeaderboard,
