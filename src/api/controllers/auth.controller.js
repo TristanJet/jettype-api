@@ -16,7 +16,6 @@ const authcontroller = async (req, res, next) => {
         });
         res.json({
           message: 'Unauthorized, guest user created.',
-          token: sessionId,
           timestamp: new Date().toISOString(),
         });
       } else {
