@@ -1,7 +1,7 @@
 const verify = require('../utility/google-verify');
 const createId = require('../utility/createId');
 const {
-  createSignedUser, getUserData, setUserData, createSession, userExists, sessionExists, getAuthTypeFromSession, getUserIdFromSession,
+  createSignedUser, getUserData, migrate, createSession, userExists, sessionExists, getAuthTypeFromSession, getUserIdFromSession,
 } = require('../../repository');
 
 const createUserAndSession = async (jwt) => {
@@ -24,12 +24,13 @@ const handleSignin = async (req) => {
     const [userId, sessionId] = await createUserAndSession(req.body.credential);
     return sessionId;
   }
-  if (await getAuthTypeFromSession(req.cookies['jet-session']) === 'guest') {
+  const guestSessionId = req.cookies['jet-session'];
+  if (await getAuthTypeFromSession(guestSessionId) === 'guest') {
     let guestUserId = await getUserIdFromSession(req.cookies['jet-session']);
     if (await userExists(guestUserId)) {
       const [name, avgWPM, totalCrowns] = await getUserData(guestUserId);
       const [signedUserId, sessionId] = await createUserAndSession(req.body.credential);
-      await setUserData(signedUserId, name, avgWPM, totalCrowns);
+      await migrate(signedUserId, guestUserId, guestSessionId, name, avgWPM, totalCrowns);
       return sessionId
     }
   }

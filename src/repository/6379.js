@@ -46,12 +46,15 @@ const addUserName = async (id, name) => await client.HSET(`user:${id}`, { name }
 
 const getUserData = async (id) => await client.HMGET(`user:${id}`, ['name', 'avgWPM', 'totalCrowns']);
 
-const setUserData = async (id, name, avgWPM, totalCrowns) => {
-  await client.HSET(`user:${id}`, {
+const migrate = async (signedUserId, guestUserId, guestSessionId, name, avgWPM, totalCrowns) => {
+  await client.HSET(`user:${signedUserId}`, {
     name,
     avgWPM,
     totalCrowns,
   })
+  const allWpm = await client.LRANGE(`allWpm:${guestUserId}`, 0, -1);
+  await client.RPUSH(`allWpm:${signedUserId}`, allWpm);
+  await client.DEL(`user:${guestUserId}`, `session:${guestSessionId}`, `allWpm:${guestUserId}`)
 }
 
 const createSession = async (userId, sessionId, authType) => {
@@ -136,7 +139,7 @@ module.exports = {
   createGuestUser,
   addUserName,
   getUserData,
-  setUserData,
+  migrate,
   createSession,
   pushGameState,
   setStartDate,
