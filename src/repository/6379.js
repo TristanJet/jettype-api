@@ -72,8 +72,9 @@ const createSession = async (userId, sessionId, authType) => {
   });
   if ((sessionSetResp && sessionExpResp) && linkSeshUserResp) {
     return 1;
+  } else {
+    return 0;
   }
-  return 0;
 };
 
 const pushGameState = async (sessionId, data) => await client.RPUSH(`gameState:${sessionId}`, data);

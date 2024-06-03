@@ -7,7 +7,7 @@ const createGuest = async () => {
   console.log(`session id${sessionid}`);
   const userResp = await createGuestUser(userid);
   console.log(`userresp${userResp}`);
-  const sessionResp = await createSession(userid, sessionid);
+  const sessionResp = await createSession(userid, sessionid, 'guest');
   console.log(`session resp${sessionResp}`);
   if (userResp && sessionResp) {
     return sessionid;
