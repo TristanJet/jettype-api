@@ -54,7 +54,7 @@ const migrate = async (signedUserId, guestUserId, guestSessionId, name, avgWPM, 
   })
   const allWpm = await client.LRANGE(`allWpm:${guestUserId}`, 0, -1);
   await client.RPUSH(`allWpm:${signedUserId}`, allWpm);
-  await client.DEL(`user:${guestUserId}`, `session:${guestSessionId}`, `allWpm:${guestUserId}`)
+  await client.DEL([`user:${guestUserId}`, `session:${guestSessionId}`, `allWpm:${guestUserId}`])
 }
 
 const createSession = async (userId, sessionId, authType) => {
