@@ -1,14 +1,14 @@
 const verify = require('../utility/google-verify');
 const createId = require('../utility/createId');
 const {
-  createUser, getUserData, setUserData, createSession, userExists, sessionExists, getAuthTypeFromSession, getUserIdFromSession,
+  createSignedUser, getUserData, setUserData, createSession, userExists, sessionExists, getAuthTypeFromSession, getUserIdFromSession,
 } = require('../../repository');
 
 const createUserAndSession = async (jwt) => {
   /*Creates user if user doesn't exist, always creates session*/
   const decoded = await verify(jwt);
   if (!await userExists(decoded.sub)) {
-    await createUser(decoded.sub, decoded.given_name, decoded.email);
+    await createSignedUser(decoded.sub, decoded.given_name, decoded.email);
   }
   const sessionId = createId();
   await createSession(decoded.sub, sessionId, 'signed');
