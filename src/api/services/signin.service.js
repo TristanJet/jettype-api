@@ -16,11 +16,13 @@ const createUserAndSession = async (jwt) => {
 };
 
 const handleSignin = async (req) => {
-  if (!req.cookies['jet-session'] || !(await sessionExists(req.cookies['jet-session']))) {
+  if (!req.cookies['jet-session']) {
     return await createUserAndSession(req.body.credential);
   }
-
-  if (await getAuthTypeFromSession(req.cookies['jet-session'] === 'guest')) {
+  if (!(await sessionExists(req.cookies['jet-session']))) {
+    return await createUserAndSession(req.body.credential);
+  }
+  if (await getAuthTypeFromSession(req.cookies['jet-session']) === 'guest') {
     let guestUserId = await getUserIdFromSession(req.cookies['jet-session']);
     if (await userExists(guestUserId)) {
       const [name, avgWPM, totalCrowns] = await getUserData(guestUserId);
