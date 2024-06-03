@@ -35,7 +35,7 @@ const createGuestUser = async (id) => {
     avgWPM: 0,
     totalCrowns: 0,
   });
-  const expresp = await client.EXPIRE(`user:${id}`, 600000);
+  const expresp = await client.EXPIRE(`user:${id}`, 600000); // 1 week
   if (setresp && expresp) {
     return 1;
   }
@@ -46,13 +46,27 @@ const addUserName = async (id, name) => await client.HSET(`user:${id}`, { name }
 
 const getUserData = async (id) => await client.HMGET(`user:${id}`, ['name', 'avgWPM', 'totalCrowns']);
 
-const createSession = async (userId, sessionId) => {
+const setUserData = async (id, name, avgWPM, totalCrowns) => {
+  await client.HSET(`user:${id}`, {
+    name,
+    avgWPM,
+    totalCrowns,
+  })
+}
+
+const createSession = async (userId, sessionId, authType) => {
   const sessionSetResp = await client.HSET(`session:${sessionId}`, {
+    authType,
     userId: `${userId}`,
     isStarted: 'false',
     startDate: 0,
   });
-  const sessionExpResp = await client.EXPIRE(`session:${sessionId}`, 2600000);
+  let sessionExpResp
+  if (authType === "guest") {
+    sessionExpResp = await client.EXPIRE(`session:${sessionId}`, 600000); // 1 week
+  } else if (authType === "signed") {
+    sessionExpResp = await client.EXPIRE(`session:${sessionId}`, 2600000); // 1 month
+  }
   const linkSeshUserResp = await client.HSET(`user:${userId}`, {
     sessionId,
   });
@@ -81,6 +95,8 @@ const getSessionId = async (userId) => await client.HGET(`user:${userId}`, 'sess
 const userExists = async (id) => await client.EXISTS(`user:${id}`);
 
 const sessionExists = async (sessionId) => await client.EXISTS(`session:${sessionId}`);
+
+const getAuthTypeFromSession = async (sessionId) => await client.HGET(`session:${sessionId}`, 'authType')
 
 const getUserIdFromSession = async (sessionId) => await client.HGET(`session:${sessionId}`, 'userId');
 
@@ -119,6 +135,7 @@ module.exports = {
   createGuestUser,
   addUserName,
   getUserData,
+  setUserData,
   createSession,
   pushGameState,
   setStartDate,
@@ -129,6 +146,7 @@ module.exports = {
   getSessionId,
   userExists,
   sessionExists,
+  getAuthTypeFromSession,
   getUserIdFromSession,
   finishTimeToSession,
   getFinishTimeSession,

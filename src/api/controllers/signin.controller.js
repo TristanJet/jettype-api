@@ -1,10 +1,8 @@
-// import services
-const signin = require('../services/signin.service');
+const handleSignIn = require('../services/signin.service');
 
 const signincontroller = async (req, res, next) => {
   try {
-    const [userId, userExists] = await signin.user(req.body.credential);
-    const sessionId = await signin.session(userId, userExists);
+    const sessionId = await handleSignIn(req);
     res.cookie('jet-session', sessionId, {
       maxAge: 2600000 * 1000,
       httpOnly: true,

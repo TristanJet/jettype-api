@@ -1,31 +1,38 @@
 const verify = require('../utility/google-verify');
 const createId = require('../utility/createId');
 const {
-  createUser, createSession, getSessionId, userExists, sessionExists,
+  createUser, getUserData, setUserData, createSession, userExists, sessionExists, getAuthTypeFromSession, getUserIdFromSession,
 } = require('../../repository');
 
-const user = async (jwt) => {
+const createUserAndSession = async (jwt) => {
+  /*Creates user if user doesn't exist, always creates session*/
   const decoded = await verify(jwt);
   if (!await userExists(decoded.sub)) {
     await createUser(decoded.sub, decoded.given_name, decoded.email);
-    return [decoded.sub, 0];
-  }
-  return [decoded.sub, 1];
-};
-
-const session = async (userId, userExists) => {
-  if (userExists) {
-    const sessionId = await getSessionId(userId);
-    if (await sessionExists(sessionId)) {
-      return sessionId;
-    }
   }
   const sessionId = createId();
-  await createSession(userId, sessionId);
+  await createSession(decoded.sub, sessionId, 'signed');
   return sessionId;
 };
 
-module.exports = {
-  user,
-  session,
-};
+const handleSignin = async (req) => {
+  if (!req.cookies['jet-session'] || !(await sessionExists(req.cookies['jet-session']))) {
+    return await createUserAndSession(req.body.credential);
+  }
+
+  if (await getAuthTypeFromSession(req.cookies['jet-session'] === 'guest')) {
+    let guestUserId = await getUserIdFromSession(req.cookies['jet-session']);
+    if (await userExists(guestUserId)) {
+      const [name, avgWPM, totalCrowns] = await getUserData(guestUserId);
+      const signedUserId = req.body.credential;
+      const sessionId = await createUserAndSession(signedUserId);
+      await setUserData(signedUserId, name, avgWPM, totalCrowns);
+      return sessionId
+    }
+  }
+
+  return await createUserAndSession(req.body.credential);
+
+}
+
+module.exports = handleSignin;
