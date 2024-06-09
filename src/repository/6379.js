@@ -47,11 +47,18 @@ const addUserName = async (id, name) => await client.HSET(`user:${id}`, { name }
 const getUserData = async (id) => await client.HMGET(`user:${id}`, ['name', 'avgWPM', 'totalCrowns']);
 
 const migrate = async (signedUserId, guestUserId, guestSessionId, name, avgWPM, totalCrowns) => {
-  await client.HSET(`user:${signedUserId}`, {
-    name,
-    avgWPM,
-    totalCrowns,
-  })
+  if (name) {
+    await client.HSET(`user:${signedUserId}`, {
+      name,
+      avgWPM,
+      totalCrowns,
+    })
+  } else {
+    await client.HSET(`user:${signedUserId}`, {
+      avgWPM,
+      totalCrowns,
+    })
+  }
   const allWpm = await client.LRANGE(`allWpm:${guestUserId}`, 0, -1);
   await client.RPUSH(`allWpm:${signedUserId}`, allWpm);
   await client.DEL([`user:${guestUserId}`, `session:${guestSessionId}`, `allWpm:${guestUserId}`])
