@@ -10,7 +10,7 @@ const { onWin, addWpmAndAvg } = require('./endGame');
 
 const messageSchema = require('./msgValidation');
 
-const quote = 'Theory can only take you so far.';
+const quote = process.env.QUOTE;
 const wordCount = quote.split(' ').length;
 
 const wsServer = (ws, socket, client, getnclients) => {

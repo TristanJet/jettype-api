@@ -8,7 +8,7 @@ const authcontroller = async (req, res, next) => {
       if (sessionId) {
         res.status = 201;
         res.cookie('jet-session', sessionId, {
-          maxAge: 600000 * 1000,
+          maxAge: 600000 * 1000, //milliseconds
           httpOnly: true,
           path: '/',
           secure: true,

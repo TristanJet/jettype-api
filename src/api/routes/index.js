@@ -18,6 +18,8 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('/quote', controllers.quote);
+
 router.get('/leaderboard', controllers.leaderboard);
 
 // router.get('/alltime')
