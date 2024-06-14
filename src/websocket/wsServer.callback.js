@@ -51,7 +51,7 @@ const wsServer = (ws, socket, client, getnclients) => {
       hastyInputs += 1;
       if (hastyInputs > 3) {
         ws.close();
-        console.log('Input too quick!');
+        console.log(`${client} : Input was too quick.`);
       }
     } else if (hastyInputs) {
       hastyInputs = 0;
@@ -61,7 +61,7 @@ const wsServer = (ws, socket, client, getnclients) => {
     console.log(data);
     const validResp = messageSchema.validate(data);
     if (validResp.error) {
-      console.log('Validation error!');
+      console.log(`${client} : Message Validation error`);
       ws.close();
     }
     onMessage(ws, client, data);
@@ -85,6 +85,7 @@ const onMessage = async (ws, client, data) => {
           break;
         }
       } else if (resp > quote.length) {
+        console.log(`${client} : Input too long.`)
         ws.close();
       }
     } else if (command.cmd === 'DEL') {
