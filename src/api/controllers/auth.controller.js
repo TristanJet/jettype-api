@@ -10,7 +10,7 @@ const authcontroller = async (req, res, next) => {
     } else {
       const token = req.cookies["jet-session"];
       let signed = 0;
-      if (getAuthTypeFromSession(token) === 'signed') {
+      if (await getAuthTypeFromSession(token) === 'signed') {
         signed = 1;
       }
       res.json({
