@@ -3,6 +3,7 @@ const handleSignIn = require('../services/signin.service');
 const signincontroller = async (req, res, next) => {
   try {
     const sessionId = await handleSignIn(req);
+    res.status = 201;
     res.cookie('jet-session', sessionId, {
       maxAge: 2600000 * 3 * 1000, //3 months in milliseconds
       httpOnly: true,

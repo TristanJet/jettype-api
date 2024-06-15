@@ -1,4 +1,4 @@
-const { sessionExists } = require("../../repository");
+const { sessionExists, getAuthTypeFromSession} = require("../../repository");
 
 const authcontroller = async (req, res, next) => {
   try {
@@ -8,9 +8,15 @@ const authcontroller = async (req, res, next) => {
         timestamp: new Date().toISOString(),
       });
     } else {
+      const token = req.cookies["jet-session"];
+      let signed = 0;
+      if (getAuthTypeFromSession(token) === 'signed') {
+        signed = 1;
+      }
       res.json({
         authstatus: 1,
-        token: req.cookies["jet-session"],
+        signed,
+        token,
         timestamp: new Date().toISOString(),
       });
     }
