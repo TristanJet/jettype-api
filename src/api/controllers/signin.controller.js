@@ -4,7 +4,7 @@ const signincontroller = async (req, res, next) => {
   try {
     const sessionId = await handleSignIn(req);
     res.cookie('jet-session', sessionId, {
-      maxAge: 2600000 * 1000, //milliseconds
+      maxAge: 2600000 * 3 * 1000, //3 months in milliseconds
       httpOnly: true,
       path: '/',
       secure: true,

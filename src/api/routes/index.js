@@ -28,6 +28,8 @@ router.post('/signin', validate(schemas.signupSchema), controllers.signin);
 
 router.get('/auth', controllers.auth);
 
+router.get('/guest', controllers.guest);
+
 router.get('/user', auth, controllers.user);
 
 router.post('/user', auth, validate(schemas.nameSchema), controllers.userPost);

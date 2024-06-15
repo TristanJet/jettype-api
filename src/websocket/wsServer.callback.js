@@ -40,6 +40,7 @@ const wsServer = (ws, socket, client, getnclients) => {
     console.log(`${client} has disconnected`);
     console.log(`Remaining clients: ${getnclients()}`);
     clearInterval(intervalId);
+    clearGameState(client);
   });
 
   let hastyInputs = 0;

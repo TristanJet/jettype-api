@@ -75,7 +75,7 @@ const createSession = async (userId, sessionId, authType) => {
   if (authType === "guest") {
     sessionExpResp = await client.EXPIRE(`session:${sessionId}`, 600000); // 1 week
   } else if (authType === "signed") {
-    sessionExpResp = await client.EXPIRE(`session:${sessionId}`, 2600000); // 1 month
+    sessionExpResp = await client.EXPIRE(`session:${sessionId}`, 2600000 * 3); // 3 month
   }
   const linkSeshUserResp = await client.HSET(`user:${userId}`, {
     sessionId,
