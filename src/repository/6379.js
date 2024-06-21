@@ -52,17 +52,17 @@ const migrate = async (signedUserId, guestUserId, guestSessionId, name, avgWPM, 
       name,
       avgWPM,
       totalCrowns,
-    })
+    });
   } else {
     await client.HSET(`user:${signedUserId}`, {
       avgWPM,
       totalCrowns,
-    })
+    });
   }
   const allWpm = await client.LRANGE(`allWpm:${guestUserId}`, 0, -1);
   await client.RPUSH(`allWpm:${signedUserId}`, allWpm);
-  await client.DEL([`user:${guestUserId}`, `session:${guestSessionId}`, `allWpm:${guestUserId}`])
-}
+  await client.DEL([`user:${guestUserId}`, `session:${guestSessionId}`, `allWpm:${guestUserId}`]);
+};
 
 const createSession = async (userId, sessionId, authType) => {
   const sessionSetResp = await client.HSET(`session:${sessionId}`, {
@@ -71,10 +71,10 @@ const createSession = async (userId, sessionId, authType) => {
     isStarted: 'false',
     startDate: 0,
   });
-  let sessionExpResp
-  if (authType === "guest") {
+  let sessionExpResp;
+  if (authType === 'guest') {
     sessionExpResp = await client.EXPIRE(`session:${sessionId}`, 600000); // 1 week
-  } else if (authType === "signed") {
+  } else if (authType === 'signed') {
     sessionExpResp = await client.EXPIRE(`session:${sessionId}`, 2600000 * 3); // 3 month
   }
   const linkSeshUserResp = await client.HSET(`user:${userId}`, {
@@ -82,9 +82,8 @@ const createSession = async (userId, sessionId, authType) => {
   });
   if ((sessionSetResp && sessionExpResp) && linkSeshUserResp) {
     return 1;
-  } else {
-    return 0;
   }
+  return 0;
 };
 
 const pushGameState = async (sessionId, data) => await client.RPUSH(`gameState:${sessionId}`, data);
@@ -107,7 +106,7 @@ const userExists = async (id) => await client.EXISTS(`user:${id}`);
 
 const sessionExists = async (sessionId) => await client.EXISTS(`session:${sessionId}`);
 
-const getAuthTypeFromSession = async (sessionId) => await client.HGET(`session:${sessionId}`, 'authType')
+const getAuthTypeFromSession = async (sessionId) => await client.HGET(`session:${sessionId}`, 'authType');
 
 const getUserIdFromSession = async (sessionId) => await client.HGET(`session:${sessionId}`, 'userId');
 
@@ -115,7 +114,7 @@ const finishTimeToSession = async (sessionId, finishTime) => client.HSET(`sessio
   finishTime,
 });
 
-const getFinishTimeSession = async (sessionId) => client.HGET(`session:${sessionId}`, 'finishTime')
+const getFinishTimeSession = async (sessionId) => client.HGET(`session:${sessionId}`, 'finishTime');
 
 const getNameFromUser = async (userId) => await client.HGET(`user:${userId}`, 'name');
 

@@ -2,7 +2,7 @@ const qcontroller = async (req, res, next) => {
   try {
     res.json({
       content: {
-        quote: process.env.QUOTE
+        quote: process.env.QUOTE,
       },
       timestamp: new Date().toISOString(),
     });

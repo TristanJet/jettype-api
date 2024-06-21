@@ -85,3 +85,5 @@ src/websocket/obj.create.js
 nginx.conf
 
 nginx.current.conf
+
+eslint.config.mjs

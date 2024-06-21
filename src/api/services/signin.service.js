@@ -5,7 +5,7 @@ const {
 } = require('../../repository');
 
 const createUserAndSession = async (jwt) => {
-  /*Creates user if user doesn't exist, always creates session*/
+  /* Creates user if user doesn't exist, always creates session */
   const decoded = await verify(jwt);
   if (!await userExists(decoded.sub)) {
     await createSignedUser(decoded.sub, decoded.given_name, decoded.email);
@@ -26,14 +26,14 @@ const handleSignin = async (req) => {
   }
   const guestSessionId = req.cookies['jet-session'];
   if (await getAuthTypeFromSession(guestSessionId) === 'guest') {
-    let guestUserId = await getUserIdFromSession(req.cookies['jet-session']);
+    const guestUserId = await getUserIdFromSession(req.cookies['jet-session']);
     if (await userExists(guestUserId)) {
       const [name, avgWPM, totalCrowns] = await getUserData(guestUserId);
       const [signedUserId, sessionId] = await createUserAndSession(req.body.credential);
       await migrate(signedUserId, guestUserId, guestSessionId, name, avgWPM, totalCrowns);
-      return sessionId
+      return sessionId;
     }
   }
-}
+};
 
 module.exports = handleSignin;

@@ -86,7 +86,7 @@ const onMessage = async (ws, client, data) => {
           break;
         }
       } else if (resp > quote.length) {
-        console.log(`${client} : Input too long.`)
+        console.log(`${client} : Input too long.`);
         ws.close();
       }
     } else if (command.cmd === 'DEL') {
