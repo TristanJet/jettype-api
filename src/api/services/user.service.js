@@ -15,8 +15,9 @@ const userPostService = async (session, name) => {
   /* Look at this function The redis things are fucking up */
   const userId = await getUserIdFromSession(session);
   await addUserName(userId, name);
-  const finishTime = await getFinishTimeSession(session);
-  await addLeaderboard(finishTime, name);
+  if (await getFinishTimeSession(session)) {
+    await addLeaderboard(finishTime, name);
+  }
 };
 
 module.exports = {
