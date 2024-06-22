@@ -12,10 +12,10 @@ const userService = async (session) => {
 };
 
 const userPostService = async (session, name) => {
-  /* Look at this function The redis things are fucking up */
   const userId = await getUserIdFromSession(session);
   await addUserName(userId, name);
-  if (await getFinishTimeSession(session)) {
+  const finishTime = await getFinishTimeSession(session);
+  if (finishTime) {
     await addLeaderboard(finishTime, name);
   }
 };
