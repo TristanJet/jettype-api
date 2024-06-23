@@ -1,3 +1,5 @@
+const genAvgWPM = require("../api/utility/genAvgWpm");
+
 const {
   getStartDate,
   clearGameState,
@@ -34,6 +36,16 @@ const onWin = async (client, wordCount) => {
   console.log(
     `${client} typed the quote correctly in ${finishTime} seconds, with a wpm of: ${wpm}!`,
   );
+  addAndAverage(
+    userId,
+    wpm,
+    async (session, num) => {
+      return await popAllWpm(session, num);
+    },
+    async (userid) => {
+      return await getAllWpm(userid);
+    },
+  );
   return {
     type: "FIN",
     name,
@@ -51,7 +63,6 @@ const namedFasho = async (userId, finishTime) => {
       return name;
     }
   }
-  console.log("addleaderboard");
   await addLeaderboard(finishTime, name);
   return name;
 };
@@ -64,27 +75,12 @@ const namedMaybe = async (userId, client, finishTime) => {
   return namedFasho(userId, finishTime);
 };
 
-const addWpmAndAvg = async (client, wpm) => {
-  const userId = await getUserIdFromSession(client);
-  const respLen = await appendAllWpm(userId, wpm);
-  if (respLen === 110) {
-    await popAllWpm(userId);
-  }
-  if (respLen % 10 === 0) {
-    const all = await getAllWpm(userId);
-
-    const arrayAsFloats = all.map((item) => parseFloat(item));
-
-    const average = (
-      arrayAsFloats.reduce((acc, val) => acc + val, 0) / arrayAsFloats.length
-    ).toFixed(1);
-    console.log(average);
-
-    await updateAvgWpm(userId, average);
+const addAndAverage = async (userId, wpm, pop, get) => {
+  const length = await appendAllWpm(userId, wpm);
+  const average = await genAvgWPM(userId, length, pop, get);
+  if (average) {
+    updateAvgWpm(userId, average);
   }
 };
 
-module.exports = {
-  onWin,
-  addWpmAndAvg,
-};
+module.exports = onWin;

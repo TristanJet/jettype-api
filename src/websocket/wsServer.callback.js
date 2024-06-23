@@ -6,7 +6,7 @@ const {
   clearGameState,
 } = require("../repository");
 
-const { onWin, addWpmAndAvg } = require("./endGame");
+const onWin = require("./endGame");
 
 const messageSchema = require("./msgValidation");
 
@@ -81,7 +81,6 @@ const onMessage = async (ws, client, data) => {
           // Win condition!!
           const endData = await onWin(client, wordCount);
           ws.send(JSON.stringify(endData));
-          addWpmAndAvg(client, endData.wpm);
           break;
         }
       } else if (resp > quote.length) {
