@@ -55,14 +55,20 @@ const migrate = async (
   guestUserId,
   guestSessionId,
   guestName,
-  totalCrowns,
+  guestTotalCrowns,
 ) => {
   if (guestName) {
     await client.HSET(`user:${signedUserId}`, {
       name: guestName,
     });
   }
-  await client.HINCRBY(`user:${signedUserId}`, "totalCrowns", totalCrowns);
+  if (guestTotalCrowns) {
+    await client.HINCRBY(
+      `user:${signedUserId}`,
+      "totalCrowns",
+      guestTotalCrowns,
+    );
+  }
 
   const guestAllWpm = await client.LRANGE(`allWpm:${guestUserId}`, 0, -1);
   let newLength = 0;
