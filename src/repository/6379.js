@@ -65,7 +65,10 @@ const migrate = async (
   await client.HINCRBY(`user:${signedUserId}`, "totalCrowns", totalCrowns);
 
   const guestAllWpm = await client.LRANGE(`allWpm:${guestUserId}`, 0, -1);
-  const newLength = await appendAllWpm(signedUserId, guestAllWpm);
+  let newLength = 0;
+  if (guestAllWpm) {
+    newLength = await appendAllWpm(signedUserId, guestAllWpm);
+  }
   const newAvg = await genAvgWpm(
     signedUserId,
     newLength,
