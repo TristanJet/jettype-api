@@ -62,6 +62,7 @@ const migrate = async (
       name: guestName,
     });
   }
+  console.log("1");
   if (guestTotalCrowns) {
     await client.HINCRBY(
       `user:${signedUserId}`,
@@ -69,12 +70,14 @@ const migrate = async (
       guestTotalCrowns,
     );
   }
-
+  console.log("2");
   const guestAllWpm = await client.LRANGE(`allWpm:${guestUserId}`, 0, -1);
+  console.log("3");
   let newLength = 0;
   if (guestAllWpm.length) {
     newLength = await appendAllWpm(signedUserId, guestAllWpm);
   }
+  console.log("4");
   const newAvg = await genAvgWpm(
     signedUserId,
     newLength,
@@ -85,9 +88,11 @@ const migrate = async (
       return await getAllWpm(userId);
     },
   );
+  console.log("5");
   if (newAvg) {
     updateAvgWpm(signedUserId, newAvg);
   }
+  console.log("6");
   await client.DEL([
     `user:${guestUserId}`,
     `session:${guestSessionId}`,
