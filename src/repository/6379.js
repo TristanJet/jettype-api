@@ -66,7 +66,7 @@ const migrate = async (
 
   const guestAllWpm = await client.LRANGE(`allWpm:${guestUserId}`, 0, -1);
   let newLength = 0;
-  if (guestAllWpm) {
+  if (guestAllWpm.length) {
     newLength = await appendAllWpm(signedUserId, guestAllWpm);
   }
   const newAvg = await genAvgWpm(
