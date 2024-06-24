@@ -87,3 +87,5 @@ nginx.conf
 nginx.current.conf
 
 eslint.config.mjs
+
+test

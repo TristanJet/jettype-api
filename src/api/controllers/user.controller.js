@@ -3,9 +3,6 @@ const { userService } = require("../services/user.service");
 const userController = async (req, res, next) => {
   const sessionToken = req.cookies["jet-session"];
   let [name, avgWPM, totalCrowns] = await userService(sessionToken);
-  if (!avgWPM) {
-    avgWPM = 0;
-  }
   try {
     res.json({
       content: {

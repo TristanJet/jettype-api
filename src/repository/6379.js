@@ -73,26 +73,21 @@ const migrate = async (
   console.log("2");
   const guestAllWpm = await client.LRANGE(`allWpm:${guestUserId}`, 0, -1);
   console.log("3");
-  let newLength = 0;
   if (guestAllWpm.length) {
-    newLength = await appendAllWpm(signedUserId, guestAllWpm);
-  }
-  console.log("4");
-  const newAvg = await genAvgWpm(
-    signedUserId,
-    newLength,
-    async (userId, num) => {
-      return await popAllWpm(userId, num);
-    },
-    async (userId) => {
-      return await getAllWpm(userId);
-    },
-  );
-  console.log("5");
-  if (newAvg) {
+    const newLength = await appendAllWpm(signedUserId, guestAllWpm);
+    const newAvg = await genAvgWpm(
+      signedUserId,
+      newLength,
+      async (userId, num) => {
+        return await popAllWpm(userId, num);
+      },
+      async (userId) => {
+        return await getAllWpm(userId);
+      },
+    );
     updateAvgWpm(signedUserId, newAvg);
   }
-  console.log("6");
+  console.log("4");
   await client.DEL([
     `user:${guestUserId}`,
     `session:${guestSessionId}`,

@@ -4,7 +4,7 @@ const genAvgWPM = async (userId, allWPMlen, pop, get) => {
     await pop(userId, diff);
   }
   if (allWPMlen % 10 === 0) {
-    // Calculate on load from client
+    // Calculate on load from client?
     const all = await get(userId);
 
     const arrayAsFloats = all.map((item) => parseFloat(item));
