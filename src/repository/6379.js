@@ -64,7 +64,6 @@ const migrate = async (
       name: guestName,
     });
   }
-  console.log("1");
   if (guestTotalCrowns) {
     await client.HINCRBY(
       `user:${signedUserId}`,
@@ -72,9 +71,7 @@ const migrate = async (
       guestTotalCrowns,
     );
   }
-  console.log("2");
   const guestAllWpm = await client.LRANGE(`allWpm:${guestUserId}`, 0, -1);
-  console.log("3");
   if (guestAllWpm.length) {
     const newLength = await appendAllWpm(signedUserId, guestAllWpm);
     const newAvg = await genAvgWpm(
@@ -89,7 +86,7 @@ const migrate = async (
     );
     updateAvgWpm(signedUserId, newAvg);
   }
-  console.log("4");
+  await remLeaderboard(guestName, guestUserId);
   await client.DEL([
     `user:${guestUserId}`,
     `session:${guestSessionId}`,
@@ -184,6 +181,11 @@ const getTop3 = async () => await client.ZRANGE("leaderboard", 0, 2);
 const incrCrowns = async (userId, numCrowns) =>
   await client.HINCRBY(`user:${userId}`, "totalCrowns", numCrowns);
 
+const remLeaderboard = async (name, userId) => {
+  await client.ZREM("leaderboard", `${name}:${userId}`);
+  console.log(`${name}:${userId}`);
+};
+
 const clearLeaderboard = async () => await client.DEL("leaderboard");
 
 const appendAllWpm = async (userId, listOrString) =>
@@ -231,6 +233,7 @@ module.exports = {
   getLeaderboard,
   getTop3,
   incrCrowns,
+  remLeaderboard,
   clearLeaderboard,
   appendAllWpm,
   popAllWpm,
