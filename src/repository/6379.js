@@ -1,3 +1,5 @@
+const instance = process.env.INSTANCE;
+
 const redis = require("redis");
 
 const genAvgWpm = require("../api/utility/genAvgWpm");
@@ -153,8 +155,11 @@ const getUserIdFromSession = async (sessionId) =>
 
 const finishTimeToSession = async (sessionId, finishTime) =>
   client.HSET(`session:${sessionId}`, {
-    finishTime,
+    finishTime: `${finishTime}:${instance}`,
   });
+
+const delFinishTime = async (sessionId) =>
+  client.HDEL(`session:${sessionId}`, "finishTime");
 
 const getFinishTimeSession = async (sessionId) =>
   client.HGET(`session:${sessionId}`, "finishTime");
@@ -209,6 +214,7 @@ module.exports = {
   getAuthTypeFromSession,
   getUserIdFromSession,
   finishTimeToSession,
+  delFinishTime,
   getFinishTimeSession,
   getNameFromUser,
   getAuthTypeFromUser,

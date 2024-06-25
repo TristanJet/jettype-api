@@ -1,7 +1,10 @@
+const procInstance = process.env.INSTANCE;
+
 const {
   getUserIdFromSession,
   addUserName,
   getUserData,
+  delFinishTime,
   getFinishTimeSession,
   addLeaderboard,
 } = require("../../repository/6379");
@@ -14,9 +17,16 @@ const userService = async (session) => {
 const userPostService = async (session, name) => {
   const userId = await getUserIdFromSession(session);
   await addUserName(userId, name);
-  const finishTime = await getFinishTimeSession(session);
-  if (finishTime) {
-    await addLeaderboard(finishTime, name);
+  const string = await getFinishTimeSession(session);
+  if (string) {
+    const [finishTime, instance] = string.split(":");
+    if (instance == procInstance) {
+      await addLeaderboard(finishTime, name);
+      await delFinishTime(session);
+    } else {
+      console.log("Previous time not accepted");
+      await delFinishTime(session);
+    }
   }
 };
 
