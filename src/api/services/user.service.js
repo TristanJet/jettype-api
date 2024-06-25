@@ -21,7 +21,7 @@ const userPostService = async (session, name) => {
   if (string) {
     const [finishTime, instance] = string.split(":");
     if (instance == procInstance) {
-      await addLeaderboard(finishTime, name);
+      await addLeaderboard(finishTime, name, userId);
       await delFinishTime(session);
     } else {
       console.log("Previous time not accepted");

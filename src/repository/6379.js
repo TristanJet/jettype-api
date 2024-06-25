@@ -170,13 +170,21 @@ const getNameFromUser = async (userId) =>
 const getAuthTypeFromUser = async (userId) =>
   await client.HGET(`user:${userId}`, "authType");
 
-const addLeaderboard = async (time, name) =>
-  await client.ZADD("leaderboard", { score: time, value: name });
+const addLeaderboard = async (time, name, userId) =>
+  await client.ZADD("leaderboard", { score: time, value: `${name}:${userId}` });
 
-const getScore = async (name) => await client.ZSCORE("leaderboard", name);
+const getScore = async (name, userId) =>
+  await client.ZSCORE("leaderboard", `${name}:${userId}`);
 
 const getLeaderboard = async () =>
   await client.ZRANGE_WITHSCORES("leaderboard", 0, -1);
+
+const getTop3 = async () => await client.ZRANGE("leaderboard", 0, 2);
+
+const incrCrowns = async (userId, numCrowns) =>
+  await client.HINCRBY(`user:${userId}`, "totalCrowns", numCrowns);
+
+const clearLeaderboard = async () => await client.DEL("leaderboard");
 
 const appendAllWpm = async (userId, listOrString) =>
   await client.RPUSH(`allWpm:${userId}`, listOrString);
@@ -221,6 +229,9 @@ module.exports = {
   addLeaderboard,
   getScore,
   getLeaderboard,
+  getTop3,
+  incrCrowns,
+  clearLeaderboard,
   appendAllWpm,
   popAllWpm,
   clearAllWpm,
